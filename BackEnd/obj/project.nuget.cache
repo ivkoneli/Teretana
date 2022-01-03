@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "yJb9szvjKRsQGEjxo5HhACDX9hk85OMRuDSQfMYIVos4id4fY3UY6bcQegIZsvSluNmbu6ePGp49CbBakU19GA==",
+  "dgSpecHash": "MEBui1Jb/ygAVruHTlx1zo36KCANEgyjiF+2/NTep/5REaxSOneoW58AKELxRHnW1b5ijDAo84wejeWCS1e2sA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Andrija\\Desktop\\Teretana WEB\\BackEnd\\BackEnd.csproj",
+  "projectFilePath": "C:\\Users\\Andrija\\Desktop\\Teretana\\BackEnd\\BackEnd.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Andrija\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
     "C:\\Users\\Andrija\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",

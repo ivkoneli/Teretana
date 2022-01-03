@@ -198,11 +198,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Andrija\\Desktop\\Teretana WEB\\BackEnd\\BackEnd.csproj",
+      "projectUniqueName": "C:\\Users\\Andrija\\Desktop\\Teretana\\BackEnd\\BackEnd.csproj",
       "projectName": "BackEnd",
-      "projectPath": "C:\\Users\\Andrija\\Desktop\\Teretana WEB\\BackEnd\\BackEnd.csproj",
+      "projectPath": "C:\\Users\\Andrija\\Desktop\\Teretana\\BackEnd\\BackEnd.csproj",
       "packagesPath": "C:\\Users\\Andrija\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Andrija\\Desktop\\Teretana WEB\\BackEnd\\obj\\",
+      "outputPath": "C:\\Users\\Andrija\\Desktop\\Teretana\\BackEnd\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Andrija\\AppData\\Roaming\\NuGet\\NuGet.Config"
