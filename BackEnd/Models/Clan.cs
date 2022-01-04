@@ -23,5 +23,9 @@ namespace Models
         public string Email { get; set; }
 
 
+        public Trener trener {get;set;}   // Clan ima jednog trenera 
+
+        public Clanarina clanarina {get;set;} // Clan ima jednu clanarinu
+
     }
 }

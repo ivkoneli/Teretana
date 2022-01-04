@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -20,7 +21,7 @@ namespace Models
         [Range(25000,150000)]
         public int Plata { get; set; }
 
-        
+        public List<Clan> Clanovi {get;set;}  //Trener ima nekoliko clanova 
 
     }
 
