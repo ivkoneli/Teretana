@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Models;
 
 namespace BackEnd.Controllers
 {
@@ -11,8 +12,10 @@ namespace BackEnd.Controllers
     [Route("[controller]")]
     public class ClanController : ControllerBase
     {
-       public ClanController(){
 
+       public TeretanaContext Context{get;set;} 
+       public ClanController(TeretanaContext context){
+           Context = context ;
        }
     
         [Route("PreuzmiClana/{id}")]

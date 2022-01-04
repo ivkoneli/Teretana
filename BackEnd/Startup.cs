@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Models;
 
 namespace BackEnd
 {
@@ -27,6 +29,27 @@ namespace BackEnd
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddDbContext<TeretanaContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("TeretanaCS"));
+            });
+
+            services.AddCors(Options =>
+            {
+                Options.AddPolicy("CORS", builder =>{
+                    builder.WithOrigins(new string[]
+                      {
+                          "https://localhost:8080",
+                          "http://localhost:8080",
+                          "http://127.0.0.1:8080",
+                          "https://127.0.0.1:8080",
+                          "https://localhost:5001",
+                          "http://localhost:5000"
+                      })
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
+                });
+            });
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -44,6 +67,8 @@ namespace BackEnd
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BackEnd v1"));
             }
 
+            app.UseCors("CORS");
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();
