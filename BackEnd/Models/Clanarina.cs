@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -18,7 +19,8 @@ namespace Models
         
         public int Cena { get; set; }
 
-        public List<Spoj> ClanoviClanarine {get;set;}   // vise clanova poseduju jednu vrstu clanarine
+        
+        public List<Clan> ClanoviClanarine {get;set;}   // vise clanova poseduju jednu vrstu clanarine
         
 
     }
