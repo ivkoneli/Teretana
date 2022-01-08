@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -9,6 +10,11 @@ namespace Models
     {
         [Key]
         public int ID { get; set; }
+
+        [Required]
+        [MaxLength(12)]
+        public int BrKartice { get; set; }
+
 
         [Required]
         [MaxLength(20)]
@@ -23,11 +29,14 @@ namespace Models
         [MaxLength(30)]
         public string Email { get; set; }
 
+
         [JsonIgnore]
         public Trener trener {get;set;}   // Clan ima jednog trenera 
 
         [JsonIgnore]
         public Clanarina clanarina {get;set;} // Clan ima jednu clanarinu
+    
+        public List<Termin> termin {get;set;} 
 
     }
 }

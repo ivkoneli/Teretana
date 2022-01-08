@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Models;
 
@@ -23,6 +24,7 @@ namespace BackEnd.Controllers
 
         public async Task<ActionResult> PreuzmiClana(){
             
+            var clanovi = await Context.Clanovi.ToListAsync();
             return Ok(Context.Clanovi);
         }
 

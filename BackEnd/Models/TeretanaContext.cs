@@ -10,7 +10,7 @@ namespace Models
 
         public DbSet<Trener> Treneri{get;set;}
 
-        // public DbSet<Spoj> TreneriClanovi {get ;set;}
+        public DbSet<Termin> Termini {get ;set;}
 
         public TeretanaContext(DbContextOptions options) :base(options)
         {

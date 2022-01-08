@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -9,6 +10,9 @@ namespace Models
         [Key]
         public int ID { get; set; }
 
+        [Required]
+        [MaxLength(8)]
+        public int brLicence { get; set; }
         [Required]
         [MaxLength(20)]
         public string Ime { get; set; }
@@ -22,6 +26,8 @@ namespace Models
         public int Plata { get; set; }
 
         public List<Clan> Clanovi {get;set;}  //Trener ima nekoliko clanova 
+
+        public List<Termin> termini {get;set;} // Trener ima listu svojih termina 
 
     }
 

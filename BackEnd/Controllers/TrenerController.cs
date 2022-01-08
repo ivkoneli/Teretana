@@ -25,9 +25,10 @@ namespace BackEnd.Controllers
         public async Task<ActionResult> VratiTrenere(string ime ,string prezime)
         {
 
-            var treneri = Context.Treneri
+            var treneri = await Context.Treneri
                 .Where(p=> p.Ime == ime && p.Prezime == prezime)
-                .Include(p => p.Clanovi);
+                .Include(p => p.Clanovi)
+                .ToListAsync();
 
             return Ok(treneri);
         }
@@ -38,8 +39,9 @@ namespace BackEnd.Controllers
         public async Task<ActionResult> VratiSveTrenere()
         {
 
-            var treneri = Context.Treneri               
-                .Include(p => p.Clanovi);
+            var treneri =await Context.Treneri               
+                .Include(p => p.Clanovi)
+                .ToListAsync();
 
             return Ok(treneri);
         }

@@ -25,9 +25,10 @@ namespace BackEnd.Controllers
         public async Task<ActionResult> VratiClanarine(string naziv)
         {
             
-            var clanarine =  Context.Clanarine
+            var clanarine = await  Context.Clanarine
                     .Where(p=> p.Naziv == naziv)
-                   .Include(p=> p.ClanoviClanarine);
+                   .Include(p=> p.ClanoviClanarine)
+                   .ToListAsync();
             return Ok(clanarine);
         }
 
@@ -36,8 +37,9 @@ namespace BackEnd.Controllers
 
         public async Task<ActionResult> VratiSveClanarine()
         {
-            var clanarine = Context.Clanarine
-            .Include(p=> p.ClanoviClanarine);
+            var clanarine = await Context.Clanarine
+            .Include(p=> p.ClanoviClanarine)
+            .ToListAsync();
             return Ok(clanarine);
         }
 
