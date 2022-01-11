@@ -29,13 +29,13 @@ namespace Models
         [MaxLength(30)]
         public string Email { get; set; }
 
-
-        [JsonIgnore]
+        [Required]
         public Trener trener {get;set;}   // Clan ima jednog trenera 
 
-        [JsonIgnore]
+        [Required]
         public Clanarina clanarina {get;set;} // Clan ima jednu clanarinu
     
+        [JsonIgnore]
         public List<Termin> termin {get;set;} 
 
     }

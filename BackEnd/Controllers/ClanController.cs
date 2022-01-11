@@ -21,23 +21,94 @@ namespace BackEnd.Controllers
     
         [Route("PreuzmiClana")]
         [HttpGet]
-
         public async Task<ActionResult> PreuzmiClana(){
             
-            var clanovi = await Context.Clanovi.ToListAsync();
-            return Ok(Context.Clanovi);
+            var clanovi = await Context.Clanovi
+            .Include(p=> p.trener)
+            .Include(p=> p.clanarina)
+            .ToListAsync();
+
+            var clan = clanovi.Select(p=>
+            new{
+                id = p.ID,
+                brKartice = p.BrKartice,
+                ime = p.Ime,
+                prezime = p.Prezime,
+                email = p.Email,
+                clanarina = p.clanarina.ID,
+                trener = p.trener.ID,
+            });
+        
+
+            return Ok(clan);
+        }
+        [Route("PreuzmiClanaC/{clanarinaID}")]
+        [HttpGet]
+        public async Task<ActionResult> PreuzmiClanapoClanarini(int clanarinaID){
+            
+            var clanovi = await Context.Clanovi.Where(p=> p.clanarina.ID == clanarinaID)
+            .Include(p=> p.trener)
+            .Include(p=> p.clanarina)
+            .ToListAsync();
+
+            var clan = clanovi.Select(p=>
+            new{
+                id = p.ID,
+                brKartice = p.BrKartice,
+                ime = p.Ime,
+                prezime = p.Prezime,
+                email = p.Email,   
+                clanarina = p.clanarina.ID,                         
+                trener = p.trener.ID,
+            });
+        
+            return Ok(clan);
+        }
+        [Route("PreuzmiClanaT/{trenerID}")]
+        [HttpGet]
+        public async Task<ActionResult> PreuzmiClanapoTreneru(int trenerID){
+            
+            var clanovi = await Context.Clanovi.Where(p=> p.trener.ID == trenerID)
+            .Include(p=> p.trener)
+            .Include(p=> p.clanarina)
+            .ToListAsync();
+
+            var clan = clanovi.Select(p=>
+            new{
+                id = p.ID,
+                brKartice = p.BrKartice,
+                ime = p.Ime,
+                prezime = p.Prezime,
+                email = p.Email,   
+                clanarina = p.clanarina.ID,                         
+                trener = p.trener.ID,
+            });
+             return Ok(clan);
         }
 
 
-        [Route("Uclani")]
+        [Route("Uclani/{ime}/{prezime}/{email}/{idtrenera}/{idclanarine}")]
         [HttpPost]
-        public async Task<ActionResult> Uclani([FromBody] Clan clan)
+        public async Task<ActionResult> Uclani([FromRoute] string ime ,string prezime , string email ,int idtrenera ,int idclanarine)
         {
             try
-            {
-                Context.Clanovi.Add(clan);
+            { 
+                var trener = await Context.Treneri.Where(p=> p.ID == idtrenera).FirstOrDefaultAsync();
+                var clanarina = await Context.Clanarine.Where(p=> p.ID == idclanarine).FirstOrDefaultAsync();
+                Clan c = new Clan
+                {
+                Ime = ime,
+                Prezime= prezime,
+                Email = email,
+                trener = trener,
+                clanarina = clanarina,
+            };
+                if (Context.Clanovi.Contains(c))
+                    return BadRequest("Clan vec postoji !");
+                else
+                    Context.Clanovi.Add(c);
                 await Context.SaveChangesAsync();
-                return Ok($"Clan je uclanjen ID je : {clan.ID}");
+                return Ok($"Clan je uclanjen ID je : {c.ID}");
             }
             catch(Exception e)
             {
@@ -54,7 +125,7 @@ namespace BackEnd.Controllers
                 var clan = Context.Clanovi.Where(p => p.Ime == ime && p.Prezime == prezime).FirstOrDefault();
                 if (clan !=null)
                 {         
-                    clan.clanarina = clanarina;
+                    clan.clanarina = clanarina; 
 
                     await Context.SaveChangesAsync();
                     return Ok($"Uspesno promenjena clanarina u {clanarina.Naziv}" );

@@ -19,14 +19,14 @@ namespace BackEnd.Controllers
            Context = context ;
        }
 
-        [Route("Treneri/{ime}/{prezime}")]
+        [Route("Treneri/{idtrenera}")]
         [HttpGet]
 
-        public async Task<ActionResult> VratiTrenere(string ime ,string prezime)
+        public async Task<ActionResult> VratiTrenere(int idtrenera)
         {
 
             var treneri = await Context.Treneri
-                .Where(p=> p.Ime == ime && p.Prezime == prezime)
+                .Where(p=> p.ID == idtrenera)
                 .Include(p => p.Clanovi)
                 .ToListAsync();
 
@@ -41,9 +41,26 @@ namespace BackEnd.Controllers
 
             var treneri =await Context.Treneri               
                 .Include(p => p.Clanovi)
+                .ThenInclude(p=> p.clanarina)
                 .ToListAsync();
 
-            return Ok(treneri);
+            var trener = treneri.Select(p=>
+            new{
+                id = p.ID,
+                brLicence = p.brLicence,
+                ime = p.Ime,
+                prezime =p.Prezime,
+                plata = p.Plata,
+                clanovi =p.Clanovi.Select(q=>
+                new{
+                    ime = q.Ime,
+                    prezime = q.Prezime,
+                    clanarina = q.clanarina.Naziv
+                })
+
+            });
+
+            return Ok(trener);
         }
 
 

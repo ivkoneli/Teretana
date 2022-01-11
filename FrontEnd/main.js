@@ -12,10 +12,9 @@ fetch("https://localhost:5001/Clan/PreuzmiClana")
 .then(p=>{
     p.json().then(clanovi =>{
         clanovi.forEach(clan=> {
-            var c = new Clan(clan.id , clan.brKartice, clan.ime ,clan.prezime ,clan.email);
+            var c = new Clan(clan.id , clan.brKartice, clan.ime ,clan.prezime ,clan.email,clan.trener ,clan.clanarina);
             listaclanova.push(c);
         })
-
 
     })
 });

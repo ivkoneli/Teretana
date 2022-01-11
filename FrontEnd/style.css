@@ -1,0 +1,57 @@
+.GlavniKontejner{
+    display: flex;
+    flex-direction: column;
+}
+.Forme{
+    display: flex;
+    flex-direction: row;
+}
+.Forma{
+    width: 250px;
+    margin: 20px;
+    background-color: blanchedalmond;
+}
+.Pretraga{
+    background-color: blanchedalmond;
+    display: flex;
+    flex-direction: column;
+}
+.divzaIme ,.divzaPrezime,.divzaMail,.FormaDivzaClanarinu ,.FormaDivzaTrenera ,.divzaTermin{
+    display: flex;
+    justify-content: flex-end;
+    margin: 5px;
+}
+.inputIme , .inputPrezime ,.inputEmail ,.FormaselectClanarina , .FormaselectTrener ,.inputzaTermin{
+    display: flex;
+    max-width: 160px;
+    width: 65%;
+    height:fit-content;
+    text-align: left;
+}
+.labelIme , .labelPrezime , .labelEmail , .labelClanarina , .labelTrener , .labelTermin{
+
+    display: flex;
+    text-align: left;
+    width: 35%;
+    min-width: 50px;
+}
+.divzaTermin{
+    padding-left: 0;
+}
+.labelSaznajVise{
+    font-size: 25;
+    font-weight: bold;
+}
+.btnPrikazClanova{
+    width: 150px;
+    height: 50px;
+    margin-top: 5px;
+}
+table ,tr ,th ,td{
+    border: 1px solid black;
+    
+}
+table{
+    border-collapse: collapse;
+    background-color: blanchedalmond;
+}

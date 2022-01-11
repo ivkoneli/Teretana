@@ -29,7 +29,19 @@ namespace BackEnd.Controllers
                     .Where(p=> p.Naziv == naziv)
                    .Include(p=> p.ClanoviClanarine)
                    .ToListAsync();
-            return Ok(clanarine);
+
+            var clanarina = clanarine.Select(p=>
+            new{
+
+                naziv = p.Naziv,
+                clanovi =p.ClanoviClanarine.Select(q=>
+                new{
+                    ime = q.Ime,
+                    prezime = q.Prezime,
+                })
+            });
+            
+            return Ok(clanarina);
         }
 
         [Route("Clanarine")]
@@ -37,10 +49,23 @@ namespace BackEnd.Controllers
 
         public async Task<ActionResult> VratiSveClanarine()
         {
-            var clanarine = await Context.Clanarine
-            .Include(p=> p.ClanoviClanarine)
-            .ToListAsync();
-            return Ok(clanarine);
+            var clanarine = await  Context.Clanarine
+                   .Include(p=> p.ClanoviClanarine)
+                   .ToListAsync();
+
+            var clanarina = clanarine.Select(p=>
+            new{
+                id = p.ID,
+                naziv = p.Naziv,
+                cena = p.Cena,
+                clanovi =p.ClanoviClanarine.Select(q=>
+                new{
+                    ime = q.Ime,
+                    prezime = q.Prezime,
+                })
+            });
+            
+            return Ok(clanarina);
         }
 
     }
