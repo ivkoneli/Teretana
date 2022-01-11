@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dbArpn65iFJQj3c7qzods5eOog7H0kxi69cXeI1m1AnCexZ7ef8jrIWTAxE8AIYnaircktUEDuvSqeegUoT6+A==",
+  "dgSpecHash": "hzPaqkvuJCJJdbh1726CqFvRjuuretw627P+SaNt7U8N93zocvqh/XOlUw5BbHtuTgtI6XCvJp8JdF6ltXNnBw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Andrija\\Desktop\\Teretana\\BackEnd\\BackEnd.csproj",
+  "projectFilePath": "C:\\Users\\Andrija\\Desktop\\Teretana\\backend\\BackEnd.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Andrija\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Andrija\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
