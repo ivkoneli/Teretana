@@ -93,22 +93,33 @@ namespace BackEnd.Controllers
         {
             try
             { 
+                var clanovi = await Context.Clanovi.Where(p=> p.Email == email).FirstOrDefaultAsync();
                 var trener = await Context.Treneri.Where(p=> p.ID == idtrenera).FirstOrDefaultAsync();
                 var clanarina = await Context.Clanarine.Where(p=> p.ID == idclanarine).FirstOrDefaultAsync();
-                Clan c = new Clan
-                {
-                Ime = ime,
-                Prezime= prezime,
-                Email = email,
-                trener = trener,
-                clanarina = clanarina,
-            };
-                if (Context.Clanovi.Contains(c))
-                    return BadRequest("Clan vec postoji !");
-                else
-                    Context.Clanovi.Add(c);
-                await Context.SaveChangesAsync();
-                return Ok($"Clan je uclanjen ID je : {c.ID}");
+                    if (trener == null || clanarina == null)
+                    {
+                        return BadRequest("Wtf si upravo probao ti lice ???");
+                    }
+                    else
+                    {
+                        Clan c = new Clan
+                        {
+                            Ime = ime,
+                            Prezime= prezime,
+                            Email = email,
+                            trener = trener,
+                            clanarina = clanarina,
+                        };
+                
+                        if (clanovi != null){
+                            return BadRequest("Clan vec postoji !");
+                        }
+                        else{
+                            Context.Clanovi.Add(c);
+                            await Context.SaveChangesAsync();
+                            return Ok($"Clan je uclanjen ID je : {c.ID}");
+                        }
+                    }
             }
             catch(Exception e)
             {

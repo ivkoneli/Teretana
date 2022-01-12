@@ -20,12 +20,12 @@ namespace BackEnd.Controllers
        }
 
 
-       [Route("PrikaziTermineClana{ime}/{prezime}/")]
+       [Route("PrikaziTermineClana{ime}/{prezime}/{email}")]
        [HttpGet]
 
-       public async Task<ActionResult> VratiTermine(string ime ,string prezime)
+       public async Task<ActionResult> VratiTermine(string ime ,string prezime,string email)
        {
-           var clanovi = await Context.Clanovi.Where(p=> p.Ime == ime && p.Prezime == prezime)
+           var clanovi = await Context.Clanovi.Where(p=> p.Ime == ime && p.Prezime == prezime && p.Email == email)
            .Include(p=> p.termin)
            .ThenInclude(p=> p.trener)
            .ToListAsync();

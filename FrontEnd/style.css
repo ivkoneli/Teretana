@@ -7,14 +7,20 @@
     flex-direction: row;
 }
 .Forma{
-    width: 250px;
+    max-width: 250px;
+    min-width: 200px;
+    width: 25%;
     margin: 20px;
     background-color: blanchedalmond;
 }
 .Pretraga{
+    max-width: 350px;
+    min-width: 300px;
+    width: 30%;
     background-color: blanchedalmond;
     display: flex;
     flex-direction: column;
+    margin: 20px;
 }
 .divzaIme ,.divzaPrezime,.divzaMail,.FormaDivzaClanarinu ,.FormaDivzaTrenera ,.divzaTermin{
     display: flex;
@@ -35,17 +41,11 @@
     width: 35%;
     min-width: 50px;
 }
-.divzaTermin{
-    padding-left: 0;
-}
 .labelSaznajVise{
+    text-align: center;
     font-size: 25;
     font-weight: bold;
-}
-.btnPrikazClanova{
-    width: 150px;
-    height: 50px;
-    margin-top: 5px;
+    width: 100%;
 }
 table ,tr ,th ,td{
     border: 1px solid black;
@@ -54,4 +54,49 @@ table ,tr ,th ,td{
 table{
     border-collapse: collapse;
     background-color: blanchedalmond;
+    margin: 20px;
+}
+body{
+    background-color: black;
+}
+.divzaClanarinu , .divzaTrenera{
+    display: flex;
+    justify-content: flex-end;
+    margin: 5px;
+}
+.selectClanarina , .selectTrener{
+    display: flex;
+    max-width: 160px;
+    width: 65%;
+    height:fit-content;
+    text-align: left;
+}
+.labelPretragaClanarina , .labelPretragaTrener{
+    display: flex;
+    text-align: left;
+    width: 35%;
+    min-width: 50px;
+}
+.btnPrikazClanova{
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    height: 35%;
+}
+.btnPretraga{
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+.btnUclani , .btnRezervisi{
+    width: 90%;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.btnRezervisi{
+    margin-bottom: 5px;
+}
+.divSaznajvise{
+    text-align: center;
+    font-size: 30;
 }
