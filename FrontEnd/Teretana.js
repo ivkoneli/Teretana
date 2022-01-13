@@ -1,5 +1,6 @@
 import { Clan } from "./Clan.js";
 import { Termin } from "./Termin.js";
+import { Trener } from "./Trener.js";
 
 export class Teretana{
 
@@ -76,6 +77,8 @@ export class Teretana{
     crtajTabeluTermina(host){
 
         this.obrisiPrethodniSadrzaj();
+
+
         let divTabela = document.createElement("div");
         divTabela.className ="divTabelaTermina";
         host.appendChild(divTabela);
@@ -95,7 +98,7 @@ export class Teretana{
         tabela.appendChild(tablebody);
 
         let th;
-        var zag=[/*"ID",*/"DATUM1","DATUM2" , "CLAN" ,"TRENER"];
+        var zag=["DATUM1","DATUM2" , "CLAN" ,"TRENER"];
         zag.forEach(el=>{
             th = document.createElement("th");
             th.innerHTML=el;
@@ -206,6 +209,15 @@ export class Teretana{
         btnRezervisi.className ="btnRezervisi";
         btnRezervisi.innerHTML = "Rezervisi";
         host.appendChild(btnRezervisi);
+
+
+
+
+        let btnPrikaziT = document.createElement("button");
+        btnPrikaziT.onclick=(ev)=>this.prikaziSveTermine();
+        btnPrikaziT.className ="btnPrikaziTermine";
+        btnPrikaziT.innerHTML = "PrikaziTermine";
+        host.appendChild(btnPrikaziT);
         
     }
     rezervisiTermin(){
@@ -226,27 +238,75 @@ export class Teretana{
          "\n Trener :" + trener.ime + ' ' + trener.prezime+
          "\n Datum :" + datum.value );
 
-          fetch( `PrikaziTermineClana/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}`,
+        this.prikaziTermineClana();
+        fetch(`https://localhost:5001/Termin/DodajTermin/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}/${datum.value}`,
         {
-            method:"GET"
+            method :"POST",
+            Headers:{
+                "Content-Type":"application/json"
+            },
         }).then(s=>{
                 if(s.ok){
-                         //var telo = this.obrisiPrethodniSadrzaj()
+                    console.log(podaci);
+                    this.prikaziSveTermine();
+                }
+        })
+
+    }
+    prikaziSveTermine(){
+        var telo = this.obrisiPrethodniSadrzajTermina(); // brise prethodnu tabelu (ako postoji) i opet je kreira praznu  i vrati nam tbody 
+
+        fetch(`https://localhost:5001/Termin/PrikaziSveTermineClanova/`,
+        {
+            method:"GET",
+            Headers:{
+                "Content-Type":"application/json"
+        },
+        }).then(s=>{
+                if(s.ok){
+                         //console.log(podaci);//var telo = this.obrisiPrethodniSadrzaj() 
                     s.json().then(data =>{
                             console.log(data);
-                            var teloTabele = document.querySelector(".TabelaPodaciTermini");
+                            //var teloTabele = document.querySelector(".TabelaPodaciTermini"); //tbody za tabelu koju smo napravili
                             data.forEach(tr=>
-                                {
-                                    var trener = this.listaTrenera[tr.trener-1];
-                                    var clan = this.listaClanova[tr.clan-1];                                   
-                                    let t = new Termin(tr.termin.pocetakTermina ,tr.termin.krajTermina, clan.ime , trener.ime);
-                                    t.crtaj(teloTabele);
+                                {           
+                                    var clan = this.listaClanova.find(clan => clan.id == tr.clan); // tr.clan je ID clana 
+                                    var trener = this.listaTrenera.find(trener => trener.id == tr.trener); // IDtrenera      
+                                    let t = new Termin(tr.id,tr.pocetakTermina,tr.krajTermina,clan.ime,trener.ime);
+                                    t.crtaj(telo); // crtanje u tu tabelu 
                                 })
                             
                     })
                 }
         })
+    }
+    prikaziTermineClana(){
+        let podaci = [];
+        podaci = this.prikupiInformacijeoClanu();
 
+        fetch(`https://localhost:5001/Termin/PrikaziTermineClana/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}`,
+        {
+            method:"GET",
+            Headers:{
+                "Content-Type":"application/json"
+        },
+        }).then(s=>{
+                if(s.ok){
+                    console.log(podaci);//var telo = this.obrisiPrethodniSadrzaj() 
+                    s.json().then(data =>{
+                            console.log(data);
+                            var teloTabele = document.querySelector(".TabelaPodaciTermini"); //tbody za tabelu koju smo napravili
+                            data.forEach(tr=>
+                                {           
+                                    var clan = this.listaClanova.find(clan => clan.id == tr.clan); // tr.clan je ID clana 
+                                    var trener = this.listaTrenera.find(trener => trener.id == tr.trener); // IDtrenera      
+                                    let t = new Termin(tr.pocetakTermina ,tr.krajTermina,clan.ime,trener.ime);
+                                    t.crtaj(teloTabele); // crtanje u tu tabelu 
+                                })
+                            
+                    })
+                }
+        })
     }
     obrisiPrethodniSadrzajTermina(){
         if(document.querySelector(".TabelaTermini") !=null){
@@ -256,12 +316,16 @@ export class Teretana{
             let kontTabeleTermini = document.createElement("div");
             this.container.appendChild(kontTabeleTermini);
             this.crtajTabeluTermina(kontTabeleTermini);
+            return document.querySelector(".TabelaPodaciTermini");
+
         }
         else
         {
             let kontTabeleTermini = document.createElement("div");
             this.container.appendChild(kontTabeleTermini);
             this.crtajTabeluTermina(kontTabeleTermini);
+            return document.querySelector(".TabelaPodaciTermini");
+
         } 
     }
     prikupiInformacijeoClanu(){
@@ -430,8 +494,9 @@ export class Teretana{
                             //var teloTabele = document.querySelector(".TabelaPodaci");
                             data.forEach(c=>
                                 {
-                                    var trener = this.listaTrenera[c.trener-1];
-                                    var clanarina = this.listaClanarina[c.clanarina-1];
+                                    console.log(c.trener);
+                                    let trener = this.listaTrenera.find(trener => trener.id == c.trener);
+                                    let clanarina = this.listaClanarina.find(clanarina => clanarina.id == c.clanarina);
                                     let cl = new Clan(c.id, c.brKartice , c.ime , c.prezime ,c.email ,trener.ime,clanarina.naziv);
                                     cl.crtaj(telo);
                                 })
@@ -462,8 +527,8 @@ export class Teretana{
                             var teloTabele = document.querySelector(".TabelaPodaci");
                             data.forEach(c=>
                                 {
-                                    var trener = this.listaTrenera[c.trener-1];
-                                    var clanarina = this.listaClanarina[c.clanarina-1];
+                                    let trener = this.listaTrenera.find(trener => trener.id == c.trener);
+                                    let clanarina = this.listaClanarina.find(clanarina => clanarina.id == c.clanarina);
                                     let cl = new Clan(c.id, c.brKartice , c.ime , c.prezime ,c.email ,trener.ime,clanarina.naziv);
                                     cl.crtaj(teloTabele);
                                 })
@@ -492,8 +557,10 @@ export class Teretana{
                             var teloTabele = document.querySelector(".TabelaPodaci");
                             data.forEach(c=>
                                 {
-                                    var trener = this.listaTrenera[c.trener-1];
-                                    var clanarina = this.listaClanarina[c.clanarina-1];
+                                    
+                                    let trener = this.listaTrenera.find(trener => trener.id == c.trener);
+                                    let clanarina = this.listaClanarina.find(clanarina => clanarina.id == c.clanarina);
+
                                     let cl = new Clan(c.id, c.brKartice , c.ime , c.prezime ,c.email ,trener.ime,clanarina.naziv);
                                     cl.crtaj(teloTabele);
                                 })

@@ -1,10 +1,10 @@
 export class Termin{
 
 
-    constructor(id,datum1,datum2,clan,trener) {
+    constructor(id,pocetakTermina,krajTermina,clan,trener) {
         this.id=id;
-        this.datum1=datum1;
-        this.datum2=datum2;
+        this.pocetakTermina=pocetakTermina;
+        this.krajTermina=krajTermina;
         this.clan=clan;
         this.trener=trener;
     }
@@ -13,20 +13,20 @@ export class Termin{
         var tr = document.createElement("tr");
         host.appendChild(tr);
 
-        let el = document.createElement("td");
-        el.innerHTML=this.datum1;
-        tr.appendChild(el);
+        let el1 = document.createElement("td");
+        el1.innerText=this.pocetakTermina;
+        tr.appendChild(el1);
 
-        el = document.createElement("td");
-        el.innerHTML=this.datum2;
-        tr.appendChild(el);
+        let el2 = document.createElement("td");
+        el2.innerText=this.krajTermina;
+        tr.appendChild(el2);
 
-        el = document.createElement("td");
-        el.innerHTML=this.clan;
-        tr.appendChild(el);
+        let el3 = document.createElement("td");
+        el3.innerText=this.clan;
+        tr.appendChild(el3);
 
-        el = document.createElement("td");
-        el.innerHTML=this.trener;
-        tr.appendChild(el);
+        let el4 = document.createElement("td");
+        el4.innerText=this.trener;
+        tr.appendChild(el4);
     }
 }

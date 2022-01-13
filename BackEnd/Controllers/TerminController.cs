@@ -20,6 +20,32 @@ namespace BackEnd.Controllers
        }
 
 
+        [Route("PrikaziSveTermineClanova")]
+       [HttpGet]
+
+       public async Task<ActionResult> VratiTermine()
+       {
+            var termini = await Context.Termini
+           .Include(p=> p.trener)
+           .Include(p=> p.clan)
+           .ToListAsync();
+
+            var termin = termini.Select(p=> 
+            new
+            {
+                idtermina = p.ID,
+                clan = p.clan.ID,                              
+                trener = p.trener.ID,                
+                                
+                pocetakTermina = p.pocetakTermina,
+                krajTermina = p.krajTermina,
+                
+
+                             
+            });
+           
+           return Ok(termin);
+       }
        [Route("PrikaziTermineClana{ime}/{prezime}/{email}")]
        [HttpGet]
 
@@ -33,13 +59,8 @@ namespace BackEnd.Controllers
             var clan = clanovi.Select(p=> 
             new
             {
-                ime = p.Ime,
-                prezime = p.Prezime,
-                brojkartice =p.BrKartice,
-                email = p.Email,
-               // clanarina = p.clanarina.Naziv,
-                trenerI = p.trener.Ime,
-                trenerP = p.trener.Prezime,
+                clan = p.ID,                              
+                trener = p.trener.ID,                
                 termin = p.termin.Select(q=>
                 new 
                 {
@@ -82,23 +103,23 @@ namespace BackEnd.Controllers
            return Ok(trener);
        }
 
-       [Route("DodajTermin/{imeC}/{prezimeC}/{brKartice}/{imeT}/{prezimeT}/{pocetakT}/{krajT}")]
+       [Route("DodajTermin/{imeC}/{prezimeC}/{email}/{pocetakTermina}")]
        [HttpPost]
 
-       public async Task<ActionResult> DodajTermin(string imeC ,string prezimeC ,
-        int brKartice ,string imeT ,string prezimeT , DateTime pocetakT , DateTime krajT)
+       public async Task<ActionResult> DodajTermin(string imeC ,string prezimeC ,string email , DateTime pocetakTermina)
        {
            try
             {
-                var clan = await Context.Clanovi.Where(p => p.BrKartice == brKartice).FirstOrDefaultAsync();
-                var trener = await Context.Treneri.Where(p => p.Ime == imeT && p.Prezime == prezimeT).FirstOrDefaultAsync();
+                var clan = await Context.Clanovi.Where(p => p.Email == email).FirstOrDefaultAsync();
+                var trenerID = clan.trener.ID;
+                var trener = await Context.Treneri.Where(p => p.ID == trenerID).FirstOrDefaultAsync();
 
                 Termin t  = new Termin
                 {
-                    pocetakTermina = pocetakT,
-                    krajTermina = krajT,
+                    clan = clan,
                     trener = trener,
-                    clan = clan
+                    pocetakTermina = pocetakTermina,
+                    krajTermina = pocetakTermina,
                 };
 
                 Context.Termini.Add(t);

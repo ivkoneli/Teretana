@@ -8,4 +8,8 @@ export class Trener{
         this.prezime=prezime;
         this.plata=plata;        
     }
+
+    ime() {
+        return this.ime;
+    }
 }
