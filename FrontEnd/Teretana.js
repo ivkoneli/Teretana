@@ -1,12 +1,14 @@
 import { Clan } from "./Clan.js";
 import { Termin } from "./Termin.js";
 import { Trener } from "./Trener.js";
+import { Clanarina } from "./Clanarina.js";
 
 export class Teretana{
 
 
-    constructor(listaClanova , listaTrenera, listaClanarina) {
-
+    constructor(id,naziv,listaClanova , listaTrenera, listaClanarina) {
+        this.id = id;
+        this.naziv = naziv;
         this.listaClanova =listaClanova;
         this.listaTrenera =listaTrenera;
         this.listaClanarina =listaClanarina;
@@ -41,7 +43,7 @@ export class Teretana{
 
         this.crtajFormuPretraga(kontFormaPretraga);
 
-        this.crtajTabelu(kontTabele);
+        //this.crtajTabelu(kontTabele);
         //this.crtajTabeluTermina(kontTabele);
 
     }
@@ -66,7 +68,7 @@ export class Teretana{
         tabela.appendChild(tablebody);
 
         let th;
-        var zag=[/*"ID",*/"BROJKARTICE" , "IME" ,"PREZIME","EMAIL","TRENER","CLANARINA"];
+        var zag=["IME" ,"PREZIME","EMAIL","TRENER","CLANARINA","TERETANA"];
         zag.forEach(el=>{
             th = document.createElement("th");
             th.innerHTML=el;
@@ -200,7 +202,7 @@ export class Teretana{
         divTermin.appendChild(l6);
         let inputTermin =document.createElement("input")
         inputTermin.className="inputTermin";
-        inputTermin.type = "Date";
+        inputTermin.type = "datetime";
         divTermin.appendChild(inputTermin);
         host.appendChild(divTermin);
 
@@ -229,16 +231,20 @@ export class Teretana{
         let datum = this.container.querySelector(".inputTermin");
         //var clanarina = this.listaClanarina[podaci[3]-1];
         var trener = this.listaTrenera[podaci[4]-1];
-
+        let date1 = new Date();
+        //date1 = datum.valueAsDate ;
+        var krajtermina = new Date(date1.getTime() + 60*60*100);
         alert("Korisnik je rezervisao novi termin" +  
          "\n Ime : " + podaci[0].value +
          "\n Prezime : " + podaci[1].value +
          //"\n Email : " + podaci[2].value +
          //"\n Clanarina : " + clanarina.naziv +
          "\n Trener :" + trener.ime + ' ' + trener.prezime+
-         "\n Datum :" + datum.value );
+         "\n DatumP :" + datum.value +
+         "\n DatumK :" + krajtermina);
 
-        this.prikaziTermineClana();
+        //this.prikaziTermineClana();
+
         fetch(`https://localhost:5001/Termin/DodajTermin/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}/${datum.value}`,
         {
             method :"POST",
@@ -248,13 +254,16 @@ export class Teretana{
         }).then(s=>{
                 if(s.ok){
                     console.log(podaci);
-                    this.prikaziSveTermine();
+                    this.prikaziTermineClana(podaci);
+                    //this.prikaziSveTermine();
                 }
         })
 
     }
     prikaziSveTermine(){
         var telo = this.obrisiPrethodniSadrzajTermina(); // brise prethodnu tabelu (ako postoji) i opet je kreira praznu  i vrati nam tbody 
+        this.obrisiPrethodniSadrzaj();
+
 
         fetch(`https://localhost:5001/Termin/PrikaziSveTermineClanova/`,
         {
@@ -280,9 +289,11 @@ export class Teretana{
                 }
         })
     }
-    prikaziTermineClana(){
-        let podaci = [];
-        podaci = this.prikupiInformacijeoClanu();
+    prikaziTermineClana(podaci){
+        //let podaci = [];
+        //podaci = this.prikupiInformacijeoClanu();
+        var telo = this.obrisiPrethodniSadrzajTermina();
+        this.obrisiPrethodniSadrzaj();
 
         fetch(`https://localhost:5001/Termin/PrikaziTermineClana/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}`,
         {
@@ -295,13 +306,13 @@ export class Teretana{
                     console.log(podaci);//var telo = this.obrisiPrethodniSadrzaj() 
                     s.json().then(data =>{
                             console.log(data);
-                            var teloTabele = document.querySelector(".TabelaPodaciTermini"); //tbody za tabelu koju smo napravili
+                            //var teloTabele = document.querySelector(".TabelaPodaciTermini"); //tbody za tabelu koju smo napravili
                             data.forEach(tr=>
                                 {           
                                     var clan = this.listaClanova.find(clan => clan.id == tr.clan); // tr.clan je ID clana 
                                     var trener = this.listaTrenera.find(trener => trener.id == tr.trener); // IDtrenera      
-                                    let t = new Termin(tr.pocetakTermina ,tr.krajTermina,clan.ime,trener.ime);
-                                    t.crtaj(teloTabele); // crtanje u tu tabelu 
+                                    let t = new Termin(tr.id,tr.pocetakTermina ,tr.krajTermina,clan.ime,trener.ime);
+                                    t.crtaj(telo); // crtanje u tu tabelu 
                                 })
                             
                     })
@@ -464,11 +475,28 @@ export class Teretana{
 
     obrisiPrethodniSadrzaj(){
 
-        var tabela = document.querySelector(".Tabela");
-        var roditelj = tabela.parentNode;
-        roditelj.removeChild(tabela);
+        //var tabela = document.querySelector(".Tabela");
+        //var roditelj = tabela.parentNode;
+        //roditelj.removeChild(tabela);
 
-        this.crtajTabelu(roditelj);
+       // this.crtajTabelu(roditelj);
+
+        if(document.querySelector(".Tabela") !=null){
+            var tabela = document.querySelector(".Tabela");
+            var roditelj = tabela.parentNode;
+            roditelj.removeChild(tabela);
+            this.crtajTabelu(roditelj);
+            return document.querySelector(".TabelaPodaci");
+
+        }
+        else
+        {
+            let kontTabela = document.createElement("div");
+            this.container.appendChild(kontTabela);
+            this.crtajTabelu(kontTabela);
+            return document.querySelector(".TabelaPodaci");
+
+        } 
 
         //var teloTabele = document.querySelector(".TabelaPodaci");
         //var roditelj = teloTabele.parentNode;
@@ -478,11 +506,14 @@ export class Teretana{
         //teloTabele.className="TabelaPodaci";
         //roditelj.appendChild(teloTabele);
 
-        var teloTabele = document.querySelector(".TabelaPodaci");
-        return teloTabele;
+       // var teloTabele = document.querySelector(".TabelaPodaci");
+        //return teloTabele;
 
     }
     prikazisveClanove(){
+        this.obrisiPrethodniSadrzajTermina();
+
+
         fetch("https://localhost:5001/Clan/PreuzmiClana/",
         {
             method:"GET"
@@ -496,8 +527,9 @@ export class Teretana{
                                 {
                                     console.log(c.trener);
                                     let trener = this.listaTrenera.find(trener => trener.id == c.trener);
-                                    let clanarina = this.listaClanarina.find(clanarina => clanarina.id == c.clanarina);
-                                    let cl = new Clan(c.id, c.brKartice , c.ime , c.prezime ,c.email ,trener.ime,clanarina.naziv);
+                                    let clanarina = this.listaClanarina.find(clanarina => clanarina.id == c.clanarina);                                  
+                                    let cl = new Clan(c.id,c.ime , c.prezime ,c.email ,trener.ime,clanarina.naziv,c.teretana); //this.naziv isto nece
+                                    console.log(cl);
                                     cl.crtaj(telo);
                                 })
                             
@@ -509,6 +541,8 @@ export class Teretana{
     }
     pretretraziTrenere(){
         
+        this.obrisiPrethodniSadrzajTermina();
+
         let optionTr = this.container.querySelector(".selectTrener");
         var treneriID =optionTr.options[optionTr.selectedIndex].value;
         console.log(treneriID);
@@ -521,16 +555,16 @@ export class Teretana{
             method:"GET"
         }).then(s=>{
                 if(s.ok){
-                    this.obrisiPrethodniSadrzaj();
+                    var telo = this.obrisiPrethodniSadrzaj();
                     s.json().then(data =>{
                             console.log(data);
-                            var teloTabele = document.querySelector(".TabelaPodaci");
+                            //var teloTabele = document.querySelector(".TabelaPodaci");
                             data.forEach(c=>
                                 {
                                     let trener = this.listaTrenera.find(trener => trener.id == c.trener);
                                     let clanarina = this.listaClanarina.find(clanarina => clanarina.id == c.clanarina);
                                     let cl = new Clan(c.id, c.brKartice , c.ime , c.prezime ,c.email ,trener.ime,clanarina.naziv);
-                                    cl.crtaj(teloTabele);
+                                    cl.crtaj(telo);
                                 })
                             
                     })
@@ -539,6 +573,8 @@ export class Teretana{
     }
 
     pretretraziClanarinu(){
+
+        this.obrisiPrethodniSadrzajTermina();
 
         let optionCl = this.container.querySelector(".selectClanarina");
         var clanarineID =optionCl.options[optionCl.selectedIndex].value;
@@ -551,10 +587,10 @@ export class Teretana{
             method:"GET"
         }).then(s=>{
                 if(s.ok){
-                    this.obrisiPrethodniSadrzaj();
+                    var telo = this.obrisiPrethodniSadrzaj();
                     s.json().then(data =>{
                             console.log(data);
-                            var teloTabele = document.querySelector(".TabelaPodaci");
+                            //var teloTabele = document.querySelector(".TabelaPodaci");
                             data.forEach(c=>
                                 {
                                     
@@ -562,7 +598,7 @@ export class Teretana{
                                     let clanarina = this.listaClanarina.find(clanarina => clanarina.id == c.clanarina);
 
                                     let cl = new Clan(c.id, c.brKartice , c.ime , c.prezime ,c.email ,trener.ime,clanarina.naziv);
-                                    cl.crtaj(teloTabele);
+                                    cl.crtaj(telo);
                                 })
                             
                     })

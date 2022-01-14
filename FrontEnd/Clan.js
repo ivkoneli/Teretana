@@ -1,14 +1,14 @@
 export class Clan{
 
 
-    constructor(id,brKartice,ime,prezime,email,trener,clanarina) {
+    constructor(id,ime,prezime,email,trener,clanarina,teretana) {
         this.id=id;
-        this.brKartice=brKartice;
         this.ime=ime;
         this.prezime=prezime;
         this.email=email;
         this.trener=trener;
         this.clanarina=clanarina;
+        this.teretana = teretana;
     }
 
     crtaj(host){
@@ -20,11 +20,11 @@ export class Clan{
         el.innerHTML=this.id;
         tr.appendChild(el);*/
 
-        let el = document.createElement("td");
+        /*let el = document.createElement("td");
         el.innerHTML=this.brKartice;
-        tr.appendChild(el);
+        tr.appendChild(el);*/
 
-        el = document.createElement("td");
+        let el = document.createElement("td");
         el.innerHTML=this.ime;
         tr.appendChild(el);
 
@@ -42,6 +42,10 @@ export class Clan{
 
         el = document.createElement("td");
         el.innerHTML=this.clanarina;
+        tr.appendChild(el);
+
+        el = document.createElement("td");
+        el.innerHTML=this.teretana;
         tr.appendChild(el);
 
     }

@@ -12,6 +12,7 @@ namespace Models
 
         public DbSet<Termin> Termini {get ;set;}
 
+        public DbSet<Teretana> Teretana {get; set;}
         public TeretanaContext(DbContextOptions options) :base(options)
         {
 

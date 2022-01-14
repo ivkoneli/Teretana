@@ -47,7 +47,8 @@ namespace BackEnd.Controllers
             var trener = treneri.Select(p=>
             new{
                 id = p.ID,
-                brLicence = p.brLicence,
+                brLicence = p.brlicence,
+                teretana = p.teretana,
                 ime = p.Ime,
                 prezime =p.Prezime,
                 plata = p.Plata,

@@ -11,8 +11,9 @@ namespace Models
         public int ID { get; set; }
 
         [Required]
-        [MaxLength(8)]
-        public int brLicence { get; set; }
+        public int brlicence { get; set; }
+
+
         [Required]
         [MaxLength(20)]
         public string Ime { get; set; }
@@ -28,6 +29,8 @@ namespace Models
         public List<Clan> Clanovi {get;set;}  //Trener ima nekoliko clanova 
 
         public List<Termin> termini {get;set;} // Trener ima listu svojih termina 
+        
+        public Teretana teretana{get;set;} // Trener ima jednu teretanu
 
     }
 

@@ -19,5 +19,7 @@ namespace Models
 
         public Clan clan{get;set;}
 
+        public Teretana teretana{get;set;}
+
     }
 }

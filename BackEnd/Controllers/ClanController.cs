@@ -26,12 +26,13 @@ namespace BackEnd.Controllers
             var clanovi = await Context.Clanovi
             .Include(p=> p.trener)
             .Include(p=> p.clanarina)
+            .Include(p=> p.teretana)
             .ToListAsync();
 
             var clan = clanovi.Select(p=>
             new{
                 id = p.ID,
-                brKartice = p.BrKartice,
+                teretana = p.teretana.ID,
                 ime = p.Ime,
                 prezime = p.Prezime,
                 email = p.Email,
@@ -49,12 +50,13 @@ namespace BackEnd.Controllers
             var clanovi = await Context.Clanovi.Where(p=> p.clanarina.ID == clanarinaID)
             .Include(p=> p.trener)
             .Include(p=> p.clanarina)
+            .Include(p=> p.teretana)
             .ToListAsync();
 
             var clan = clanovi.Select(p=>
             new{
                 id = p.ID,
-                brKartice = p.BrKartice,
+                teretana = p.teretana.ID,
                 ime = p.Ime,
                 prezime = p.Prezime,
                 email = p.Email,   
@@ -71,12 +73,13 @@ namespace BackEnd.Controllers
             var clanovi = await Context.Clanovi.Where(p=> p.trener.ID == trenerID)
             .Include(p=> p.trener)
             .Include(p=> p.clanarina)
+            .Include(p=> p.teretana)
             .ToListAsync();
 
             var clan = clanovi.Select(p=>
             new{
                 id = p.ID,
-                brKartice = p.BrKartice,
+                teretana = p.teretana.ID,
                 ime = p.Ime,
                 prezime = p.Prezime,
                 email = p.Email,   
@@ -87,15 +90,16 @@ namespace BackEnd.Controllers
         }
 
 
-        [Route("Uclani/{ime}/{prezime}/{email}/{idtrenera}/{idclanarine}")]
+        [Route("Uclani/{ime}/{prezime}/{email}/{idtrenera}/{idclanarine}/{idteretane}")]
         [HttpPost]
-        public async Task<ActionResult> Uclani([FromRoute] string ime ,string prezime , string email ,int idtrenera ,int idclanarine)
+        public async Task<ActionResult> Uclani([FromRoute] string ime ,string prezime , string email ,int idtrenera ,int idclanarine,int idteretane)
         {
             try
             { 
                 var clanovi = await Context.Clanovi.Where(p=> p.Email == email).FirstOrDefaultAsync();
                 var trener = await Context.Treneri.Where(p=> p.ID == idtrenera).FirstOrDefaultAsync();
                 var clanarina = await Context.Clanarine.Where(p=> p.ID == idclanarine).FirstOrDefaultAsync();
+                var teretana = await Context.Teretana.Where(p=> p.ID == idteretane).FirstOrDefaultAsync();
                     if (trener == null || clanarina == null)
                     {
                         return BadRequest("Wtf si upravo probao ti lice ???");
@@ -103,7 +107,8 @@ namespace BackEnd.Controllers
                     else
                     {
                         Clan c = new Clan
-                        {
+                        {   
+                            teretana = teretana,
                             Ime = ime,
                             Prezime= prezime,
                             Email = email,
@@ -114,7 +119,7 @@ namespace BackEnd.Controllers
                         if (clanovi != null){
                             return BadRequest("Clan vec postoji !");
                         }
-                        else{
+                        else{                            
                             Context.Clanovi.Add(c);
                             await Context.SaveChangesAsync();
                             return Ok($"Clan je uclanjen ID je : {c.ID}");

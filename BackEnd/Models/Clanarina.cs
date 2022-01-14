@@ -12,7 +12,6 @@ namespace Models
         [Key]
         public int ID { get; set; }
 
-
         [MaxLength(20)]
         public string Naziv { get; set; }
 
@@ -21,6 +20,8 @@ namespace Models
 
         
         public List<Clan> ClanoviClanarine {get;set;}   // vise clanova poseduju jednu vrstu clanarine
+
+        public Teretana teretana{get;set;}
         
 
     }

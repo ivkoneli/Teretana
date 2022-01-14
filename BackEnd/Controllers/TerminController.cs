@@ -28,6 +28,31 @@ namespace BackEnd.Controllers
             var termini = await Context.Termini
            .Include(p=> p.trener)
            .Include(p=> p.clan)
+           .Include(p=> p.teretana)
+           .ToListAsync();
+
+            var termin = termini.Select(p=> 
+            new
+            {
+                idtermina = p.ID,
+                teretana = p.teretana.ID,
+                clan = p.clan.ID,                              
+                trener = p.trener.ID,                
+                                
+                pocetakTermina = p.pocetakTermina,
+                krajTermina = p.krajTermina,                           
+            });
+           
+           return Ok(termin);
+       }
+       [Route("PrikaziTermineClana/{ime}/{prezime}/{email}")]
+       [HttpGet]
+
+       public async Task<ActionResult> VratiTermine(string ime ,string prezime,string email)
+       {
+           var termini = await Context.Termini.Where(p=> p.clan.Email == email)
+           .Include(p=> p.clan)
+           .ThenInclude(p=> p.trener)
            .ToListAsync();
 
             var termin = termini.Select(p=> 
@@ -38,40 +63,10 @@ namespace BackEnd.Controllers
                 trener = p.trener.ID,                
                                 
                 pocetakTermina = p.pocetakTermina,
-                krajTermina = p.krajTermina,
-                
-
-                             
+                krajTermina = p.krajTermina,                            
             });
            
            return Ok(termin);
-       }
-       [Route("PrikaziTermineClana{ime}/{prezime}/{email}")]
-       [HttpGet]
-
-       public async Task<ActionResult> VratiTermine(string ime ,string prezime,string email)
-       {
-           var clanovi = await Context.Clanovi.Where(p=> p.Ime == ime && p.Prezime == prezime && p.Email == email)
-           .Include(p=> p.termin)
-           .ThenInclude(p=> p.trener)
-           .ToListAsync();
-
-            var clan = clanovi.Select(p=> 
-            new
-            {
-                clan = p.ID,                              
-                trener = p.trener.ID,                
-                termin = p.termin.Select(q=>
-                new 
-                {
-                    pocetakTermina = q.pocetakTermina,
-                    krajTermina = q.krajTermina,
-                })
-
-                             
-            });
-           
-           return Ok(clan);
        }
        [Route("PrikaziTermineTrenera{imeTrenera}/{prezimeTrenera}")]
        [HttpGet]
@@ -80,6 +75,7 @@ namespace BackEnd.Controllers
            var treneri = await Context.Treneri.Where(p=> p.Ime == imeTrenera && p.Prezime == prezimeTrenera)
            .Include(p=> p.termini)
            .ThenInclude(p=> p.clan)
+           .Include(p=> p.teretana)
            .ToListAsync();
 
            var trener = treneri.Select(p=>
@@ -87,8 +83,8 @@ namespace BackEnd.Controllers
            {
                ime = p.Ime,
                prezime = p.Prezime,
-               brojlicence = p.brLicence,
-               
+               teretana  = p.teretana.Naziv,
+        
                termin = p.termini.Select(q=>
                new
                {
@@ -111,20 +107,29 @@ namespace BackEnd.Controllers
            try
             {
                 var clan = await Context.Clanovi.Where(p => p.Email == email).FirstOrDefaultAsync();
-                var trenerID = clan.trener.ID;
-                var trener = await Context.Treneri.Where(p => p.ID == trenerID).FirstOrDefaultAsync();
+                if (clan == null ){
+                    return BadRequest("Nepostojeci clan !");
+                }
+                else
+                {                       
+                       var trener = await Context.Treneri.Where(p => p.Clanovi.Contains(clan) == true).FirstOrDefaultAsync();
+                       var teretana = await Context.Teretana.Where( p=> p.clanovi.Contains(clan) == true).FirstOrDefaultAsync();
 
-                Termin t  = new Termin
-                {
-                    clan = clan,
-                    trener = trener,
-                    pocetakTermina = pocetakTermina,
-                    krajTermina = pocetakTermina,
-                };
+                    Termin t  = new Termin
+                    {
+                        teretana = teretana,
+                        clan = clan,
+                        trener = trener,
+                        pocetakTermina = pocetakTermina,
+                        krajTermina = pocetakTermina,
+                    };
 
-                Context.Termini.Add(t);
-                await Context.SaveChangesAsync();
-                return Ok($"Novi termin je dodat sa pocetkum u {t.pocetakTermina} i zavrsava se u {t.krajTermina}");
+                    Context.Termini.Add(t);
+                    await Context.SaveChangesAsync();
+                    return Ok($"Novi termin u {t.teretana.Naziv} je dodat sa pocetkum u {t.pocetakTermina} i zavrsava se u {t.krajTermina}");
+
+                }
+              
             }
             catch(Exception e)
             {

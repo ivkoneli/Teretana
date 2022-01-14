@@ -6,13 +6,14 @@ import {Trener} from "./Trener.js";
 var listaclanova =[];
 var listatrenera =[];
 var listaclanarina =[];
+var listateretana = [];
 
 
 fetch("https://localhost:5001/Clan/PreuzmiClana")
 .then(p=>{
     p.json().then(clanovi =>{
         clanovi.forEach(clan=> {
-            var c = new Clan(clan.id , clan.brKartice, clan.ime ,clan.prezime ,clan.email,clan.trener ,clan.clanarina);
+            var c = new Clan(clan.id , clan.ime ,clan.prezime ,clan.email,clan.trener ,clan.clanarina,clan.teretana);
             listaclanova.push(c);
         })
 
@@ -35,8 +36,23 @@ fetch("https://localhost:5001/Clanarina/Clanarine")
                     var t = new Trener(trener.id, trener.brLicence , trener.ime , trener.prezime , trener.plata);
                     listatrenera.push(t);
                 });
-                    var T = new Teretana(listaclanova,listatrenera,listaclanarina);
-                    T.crtaj(document.body);
+                fetch("https://localhost:5001/Teretana/Teretane")
+                .then(p=>{
+                    p.json().then(teretane =>{
+                        teretane.forEach(teretana =>{
+                            var T = new Teretana(teretana.id,teretana.naziv,listaclanova,listatrenera,listaclanarina);
+                            listateretana.push(T);
+                            //T.crtaj(document.body);
+                        });
+
+                
+                    })
+                    console.log(listateretana);
+                    let teretana = listateretana.find(teretana => teretana.id == 1); // pozivamo crtaj za izabranu teretanu 
+                    console.log(teretana);
+                    console.log(listateretana[1]);
+                    })
+
                 })
                 console.log(listatrenera);
             });
@@ -44,4 +60,8 @@ fetch("https://localhost:5001/Clanarina/Clanarine")
         })
     console.log(listaclanarina);
 });
+
+
+
+//teretana.crtaj(document.body);
 

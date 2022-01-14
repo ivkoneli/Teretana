@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Models;
 
 namespace BackEnd.Migrations
 {
     [DbContext(typeof(TeretanaContext))]
-    partial class TeretanaContextModelSnapshot : ModelSnapshot
+    [Migration("20220114183802_V3")]
+    partial class V3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,6 +33,10 @@ namespace BackEnd.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
+                    b.Property<int>("IDTeretane")
+                        .HasMaxLength(12)
+                        .HasColumnType("int");
+
                     b.Property<string>("Ime")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -44,17 +50,12 @@ namespace BackEnd.Migrations
                     b.Property<int>("clanarinaID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("teretanaID")
-                        .HasColumnType("int");
-
                     b.Property<int>("trenerID")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
                     b.HasIndex("clanarinaID");
-
-                    b.HasIndex("teretanaID");
 
                     b.HasIndex("trenerID");
 
@@ -71,16 +72,19 @@ namespace BackEnd.Migrations
                     b.Property<int>("Cena")
                         .HasColumnType("int");
 
+                    b.Property<int>("IDTeretane")
+                        .HasColumnType("int");
+
                     b.Property<string>("Naziv")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int?>("teretanaID")
+                    b.Property<int?>("TeretanaID")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("teretanaID");
+                    b.HasIndex("TeretanaID");
 
                     b.ToTable("Clanarine");
                 });
@@ -109,6 +113,12 @@ namespace BackEnd.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("IDteretane")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TeretanaID")
+                        .HasColumnType("int");
+
                     b.Property<int?>("clanID")
                         .HasColumnType("int");
 
@@ -118,17 +128,14 @@ namespace BackEnd.Migrations
                     b.Property<DateTime>("pocetakTermina")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("teretanaID")
-                        .HasColumnType("int");
-
                     b.Property<int?>("trenerID")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("clanID");
+                    b.HasIndex("TeretanaID");
 
-                    b.HasIndex("teretanaID");
+                    b.HasIndex("clanID");
 
                     b.HasIndex("trenerID");
 
@@ -141,6 +148,10 @@ namespace BackEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("IDTeretane")
+                        .HasMaxLength(8)
+                        .HasColumnType("int");
 
                     b.Property<string>("Ime")
                         .IsRequired()
@@ -155,15 +166,12 @@ namespace BackEnd.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("brlicence")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("teretanaID")
+                    b.Property<int?>("TeretanaID")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("teretanaID");
+                    b.HasIndex("TeretanaID");
 
                     b.ToTable("Treneri");
                 });
@@ -176,10 +184,6 @@ namespace BackEnd.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.Teretana", "teretana")
-                        .WithMany()
-                        .HasForeignKey("teretanaID");
-
                     b.HasOne("Models.Trener", "trener")
                         .WithMany("Clanovi")
                         .HasForeignKey("trenerID")
@@ -188,29 +192,25 @@ namespace BackEnd.Migrations
 
                     b.Navigation("clanarina");
 
-                    b.Navigation("teretana");
-
                     b.Navigation("trener");
                 });
 
             modelBuilder.Entity("Models.Clanarina", b =>
                 {
-                    b.HasOne("Models.Teretana", "teretana")
+                    b.HasOne("Models.Teretana", null)
                         .WithMany("clanarine")
-                        .HasForeignKey("teretanaID");
-
-                    b.Navigation("teretana");
+                        .HasForeignKey("TeretanaID");
                 });
 
             modelBuilder.Entity("Models.Termin", b =>
                 {
+                    b.HasOne("Models.Teretana", null)
+                        .WithMany("clanovi")
+                        .HasForeignKey("TeretanaID");
+
                     b.HasOne("Models.Clan", "clan")
                         .WithMany("termin")
                         .HasForeignKey("clanID");
-
-                    b.HasOne("Models.Teretana", "teretana")
-                        .WithMany("clanovi")
-                        .HasForeignKey("teretanaID");
 
                     b.HasOne("Models.Trener", "trener")
                         .WithMany("termini")
@@ -218,18 +218,14 @@ namespace BackEnd.Migrations
 
                     b.Navigation("clan");
 
-                    b.Navigation("teretana");
-
                     b.Navigation("trener");
                 });
 
             modelBuilder.Entity("Models.Trener", b =>
                 {
-                    b.HasOne("Models.Teretana", "teretana")
+                    b.HasOne("Models.Teretana", null)
                         .WithMany("treneri")
-                        .HasForeignKey("teretanaID");
-
-                    b.Navigation("teretana");
+                        .HasForeignKey("TeretanaID");
                 });
 
             modelBuilder.Entity("Models.Clan", b =>

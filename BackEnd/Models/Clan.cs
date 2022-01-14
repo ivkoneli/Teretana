@@ -9,12 +9,7 @@ namespace Models
     public class Clan
     {
         [Key]
-        public int ID { get; set; }
-
-        [Required]
-        [MaxLength(12)]
-        public int BrKartice { get; set; }
-
+        public int ID { get; set; }    
 
         [Required]
         [MaxLength(20)]
@@ -37,6 +32,9 @@ namespace Models
     
         [JsonIgnore]
         public List<Termin> termin {get;set;} 
+
+        [Required]
+        public Teretana teretana{get;set;}
 
     }
 }

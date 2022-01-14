@@ -19,29 +19,28 @@ namespace BackEnd.Controllers
            Context = context ;
        }
 
-        [Route("Clanarine/{naziv}")]
+        [Route("Clanarine/{idteretane}")]
         [HttpGet]
 
-        public async Task<ActionResult> VratiClanarine(string naziv)
+        public async Task<ActionResult> VratiClanarine(int idteretane)
         {
             
-            var clanarine = await  Context.Clanarine
-                    .Where(p=> p.Naziv == naziv)
-                   .Include(p=> p.ClanoviClanarine)
-                   .ToListAsync();
+            var clanarine = await  Context.Teretana
+            .Where(p=> p.ID == idteretane)
+            .Include(p=> p.clanarine)
+            .ToListAsync();
 
-            var clanarina = clanarine.Select(p=>
-            new{
-
-                naziv = p.Naziv,
-                clanovi =p.ClanoviClanarine.Select(q=>
-                new{
-                    ime = q.Ime,
-                    prezime = q.Prezime,
-                })
+            var listaclanarina = clanarine.Select(p=>
+            new {
+                    Teretana = p.Naziv,
+                    listaclanarina = p.clanarine.Select(q=>
+                    new{
+                        naziv = q.Naziv,
+                    })
             });
+       
             
-            return Ok(clanarina);
+            return Ok(listaclanarina);
         }
 
         [Route("Clanarine")]
@@ -51,11 +50,13 @@ namespace BackEnd.Controllers
         {
             var clanarine = await  Context.Clanarine
                    .Include(p=> p.ClanoviClanarine)
+                   .Include(p=> p.teretana)
                    .ToListAsync();
 
             var clanarina = clanarine.Select(p=>
             new{
                 id = p.ID,
+                teretana = p.teretana.Naziv,
                 naziv = p.Naziv,
                 cena = p.Cena,
                 clanovi =p.ClanoviClanarine.Select(q=>
