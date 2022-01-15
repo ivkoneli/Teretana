@@ -100,7 +100,7 @@ export class Teretana{
         tabela.appendChild(tablebody);
 
         let th;
-        var zag=["DATUM1","DATUM2" , "CLAN" ,"TRENER"];
+        var zag=["DATUM1","DATUM2" , "CLAN" ,"TRENER","TERETANA"];
         zag.forEach(el=>{
             th = document.createElement("th");
             th.innerHTML=el;
@@ -159,6 +159,7 @@ export class Teretana{
         divzaTrenera.appendChild(se);
 
         let op;
+        console.log(this.listaTrenera);
         this.listaTrenera.forEach(p => {
             op =document.createElement("option");
             op.innerHTML = p.ime + ' ' + p.prezime;
@@ -230,7 +231,8 @@ export class Teretana{
 
         let datum = this.container.querySelector(".inputTermin");
         //var clanarina = this.listaClanarina[podaci[3]-1];
-        var trener = this.listaTrenera[podaci[4]-1];
+        var trener = this.listaTrenera.find(trener => trener.id == podaci[3]);
+        console.log(podaci[3]);
         let date1 = new Date();
         //date1 = datum.valueAsDate ;
         var krajtermina = new Date(date1.getTime() + 60*60*100);
@@ -241,11 +243,12 @@ export class Teretana{
          //"\n Clanarina : " + clanarina.naziv +
          "\n Trener :" + trener.ime + ' ' + trener.prezime+
          "\n DatumP :" + datum.value +
-         "\n DatumK :" + krajtermina);
+         "\n DatumK :" + krajtermina +
+         "\n Teretana :" + this.naziv);
 
         //this.prikaziTermineClana();
 
-        fetch(`https://localhost:5001/Termin/DodajTermin/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}/${datum.value}`,
+        fetch(`https://localhost:5001/Termin/DodajTermin/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}/${datum.value}/${this.id}`,
         {
             method :"POST",
             Headers:{
@@ -265,7 +268,7 @@ export class Teretana{
         this.obrisiPrethodniSadrzaj();
 
 
-        fetch(`https://localhost:5001/Termin/PrikaziSveTermineClanova/`,
+        fetch(`https://localhost:5001/Termin/PrikaziSveTermineClanova/${this.id}`,
         {
             method:"GET",
             Headers:{
@@ -281,7 +284,7 @@ export class Teretana{
                                 {           
                                     var clan = this.listaClanova.find(clan => clan.id == tr.clan); // tr.clan je ID clana 
                                     var trener = this.listaTrenera.find(trener => trener.id == tr.trener); // IDtrenera      
-                                    let t = new Termin(tr.id,tr.pocetakTermina,tr.krajTermina,clan.ime,trener.ime);
+                                    let t = new Termin(tr.id,tr.pocetakTermina,tr.krajTermina,clan.ime,trener.ime,this.naziv);
                                     t.crtaj(telo); // crtanje u tu tabelu 
                                 })
                             
@@ -311,7 +314,7 @@ export class Teretana{
                                 {           
                                     var clan = this.listaClanova.find(clan => clan.id == tr.clan); // tr.clan je ID clana 
                                     var trener = this.listaTrenera.find(trener => trener.id == tr.trener); // IDtrenera      
-                                    let t = new Termin(tr.id,tr.pocetakTermina ,tr.krajTermina,clan.ime,trener.ime);
+                                    let t = new Termin(tr.id,tr.pocetakTermina ,tr.krajTermina,clan.ime,trener.ime,this.naziv);
                                     t.crtaj(telo); // crtanje u tu tabelu 
                                 })
                             
@@ -362,19 +365,20 @@ export class Teretana{
         let podaci = [];
         podaci = this.prikupiInformacijeoClanu();
 
-        var clanarina = this.listaClanarina[podaci[4]-1];
-        var trener = this.listaTrenera[podaci[3]-1];
+        var clanarina = this.listaClanarina.find(clanarina => clanarina.id == podaci[4]);
+        var trener = this.listaTrenera.find(trener => trener.id == podaci[3]);
 
         alert("Uclanio se novi korisink" +  
          "\n Ime : " + podaci[0].value +
          "\n Prezime : " + podaci[1].value +
          "\n Email : " + podaci[2].value +
          "\n Clanarina : " + clanarina.naziv + podaci[4] + 
-         "\n Trener :" + trener.ime + ' ' + trener.prezime + podaci[3] );
+         "\n Trener :" + trener.ime + ' ' + trener.prezime + podaci[3] +
+         "\n Teretana" + this.naziv );
          
         //this.prikazisveClanove();
         
-        fetch(`https://localhost:5001/Clan/Uclani/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}/${podaci[3]}/${podaci[4]}`,
+        fetch(`https://localhost:5001/Clan/Uclani/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}/${podaci[3]}/${podaci[4]}/${this.id}`,
         
          {
          method: "POST",
@@ -466,7 +470,7 @@ export class Teretana{
         let btnPrikazClanova = document.createElement("button");
         btnPrikazClanova.className="btnPrikazClanova";
         btnPrikazClanova.onclick=(ev)=>this.prikazisveClanove();
-        btnPrikazClanova.innerHTML = "PrikaziClanove";
+        btnPrikazClanova.innerHTML = "PrikaziTeretanu";
         //divzaDugmePrikaz.appendChild(btnPrikazClanova);
         host.appendChild(btnPrikazClanova);
 
@@ -514,7 +518,7 @@ export class Teretana{
         this.obrisiPrethodniSadrzajTermina();
 
 
-        fetch("https://localhost:5001/Clan/PreuzmiClana/",
+        fetch(`https://localhost:5001/Clan/PreuzmiClana/${this.id}`,
         {
             method:"GET"
         }).then(s=>{
@@ -527,8 +531,9 @@ export class Teretana{
                                 {
                                     console.log(c.trener);
                                     let trener = this.listaTrenera.find(trener => trener.id == c.trener);
-                                    let clanarina = this.listaClanarina.find(clanarina => clanarina.id == c.clanarina);                                  
-                                    let cl = new Clan(c.id,c.ime , c.prezime ,c.email ,trener.ime,clanarina.naziv,c.teretana); //this.naziv isto nece
+                                    let clanarina = this.listaClanarina.find(clanarina => clanarina.id == c.clanarina);
+                                    let imeT = this.naziv;                                 
+                                    let cl = new Clan(c.id,c.ime , c.prezime ,c.email ,trener.ime,clanarina.naziv,imeT);
                                     console.log(cl);
                                     cl.crtaj(telo);
                                 })
@@ -546,11 +551,11 @@ export class Teretana{
         let optionTr = this.container.querySelector(".selectTrener");
         var treneriID =optionTr.options[optionTr.selectedIndex].value;
         console.log(treneriID);
-        var trener = this.listaTrenera[treneriID-1];
+        var trener = this.listaTrenera.find(trener => trener.id == treneriID)
         alert("Trazi se trener : " + trener.ime + ' ' +  trener.prezime);
 
 
-        fetch("https://localhost:5001/Clan/PreuzmiClanaT/"+ treneriID,
+        fetch(`https://localhost:5001/Clan/PreuzmiClanaT/${treneriID}/${this.id}`,
         {
             method:"GET"
         }).then(s=>{
@@ -563,7 +568,8 @@ export class Teretana{
                                 {
                                     let trener = this.listaTrenera.find(trener => trener.id == c.trener);
                                     let clanarina = this.listaClanarina.find(clanarina => clanarina.id == c.clanarina);
-                                    let cl = new Clan(c.id, c.brKartice , c.ime , c.prezime ,c.email ,trener.ime,clanarina.naziv);
+                                    let imeT = this.naziv;
+                                    let cl = new Clan(c.brKartice , c.ime , c.prezime ,c.email ,trener.ime,clanarina.naziv,imeT);
                                     cl.crtaj(telo);
                                 })
                             
@@ -579,10 +585,10 @@ export class Teretana{
         let optionCl = this.container.querySelector(".selectClanarina");
         var clanarineID =optionCl.options[optionCl.selectedIndex].value;
         console.log(clanarineID);
-        var clanarina = this.listaClanarina[clanarineID-1];
+        var clanarina = this.listaClanarina.find(clanarina => clanarina.id == clanarineID);
         alert("Trazi se clanarina : " + clanarina.naziv);
 
-        fetch("https://localhost:5001/Clan/PreuzmiClanaC/"+ clanarineID,
+        fetch(`https://localhost:5001/Clan/PreuzmiClanaC/${clanarineID}/${this.id}`,
         {
             method:"GET"
         }).then(s=>{
@@ -596,8 +602,8 @@ export class Teretana{
                                     
                                     let trener = this.listaTrenera.find(trener => trener.id == c.trener);
                                     let clanarina = this.listaClanarina.find(clanarina => clanarina.id == c.clanarina);
-
-                                    let cl = new Clan(c.id, c.brKartice , c.ime , c.prezime ,c.email ,trener.ime,clanarina.naziv);
+                                    let imeT = this.naziv ;
+                                    let cl = new Clan(c.brKartice , c.ime , c.prezime ,c.email ,trener.ime,clanarina.naziv,imeT);
                                     cl.crtaj(telo);
                                 })
                             

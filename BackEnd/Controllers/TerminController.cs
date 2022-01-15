@@ -20,12 +20,14 @@ namespace BackEnd.Controllers
        }
 
 
-        [Route("PrikaziSveTermineClanova")]
+        [Route("PrikaziSveTermineClanova/{idteretane}")]
        [HttpGet]
 
-       public async Task<ActionResult> VratiTermine()
+       public async Task<ActionResult> VratiTermine(int idteretane)
        {
+           var teretana = await Context.Teretana.Where(p=> p.ID == idteretane).FirstOrDefaultAsync();
             var termini = await Context.Termini
+            .Where(p=> p.teretana == teretana)
            .Include(p=> p.trener)
            .Include(p=> p.clan)
            .Include(p=> p.teretana)
@@ -99,21 +101,21 @@ namespace BackEnd.Controllers
            return Ok(trener);
        }
 
-       [Route("DodajTermin/{imeC}/{prezimeC}/{email}/{pocetakTermina}")]
+       [Route("DodajTermin/{imeC}/{prezimeC}/{email}/{pocetakTermina}/{idteretane}")]
        [HttpPost]
 
-       public async Task<ActionResult> DodajTermin(string imeC ,string prezimeC ,string email , DateTime pocetakTermina)
+       public async Task<ActionResult> DodajTermin(string imeC ,string prezimeC ,string email , DateTime pocetakTermina, int idteretane)
        {
            try
             {
-                var clan = await Context.Clanovi.Where(p => p.Email == email).FirstOrDefaultAsync();
+                var clan = await Context.Clanovi.Where(p => p.Email == email && p.Ime == imeC && p.Prezime == prezimeC).FirstOrDefaultAsync();
                 if (clan == null ){
                     return BadRequest("Nepostojeci clan !");
                 }
                 else
                 {                       
                        var trener = await Context.Treneri.Where(p => p.Clanovi.Contains(clan) == true).FirstOrDefaultAsync();
-                       var teretana = await Context.Teretana.Where( p=> p.clanovi.Contains(clan) == true).FirstOrDefaultAsync();
+                       var teretana = await Context.Teretana.Where( p=> p.ID == idteretane).FirstOrDefaultAsync();
 
                     Termin t  = new Termin
                     {

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Andrija\\Desktop\\Teretana\\backend\\BackEnd.csproj": {}
+    "C:\\Users\\Andrija\\Desktop\\Teretana\\BackEnd\\BackEnd.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Andrija\\Desktop\\Teretana\\backend\\BackEnd.csproj": {
+    "C:\\Users\\Andrija\\Desktop\\Teretana\\BackEnd\\BackEnd.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Andrija\\Desktop\\Teretana\\backend\\BackEnd.csproj",
+        "projectUniqueName": "C:\\Users\\Andrija\\Desktop\\Teretana\\BackEnd\\BackEnd.csproj",
         "projectName": "BackEnd",
-        "projectPath": "C:\\Users\\Andrija\\Desktop\\Teretana\\backend\\BackEnd.csproj",
+        "projectPath": "C:\\Users\\Andrija\\Desktop\\Teretana\\BackEnd\\BackEnd.csproj",
         "packagesPath": "C:\\Users\\Andrija\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Andrija\\Desktop\\Teretana\\backend\\obj\\",
+        "outputPath": "C:\\Users\\Andrija\\Desktop\\Teretana\\BackEnd\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Andrija\\AppData\\Roaming\\NuGet\\NuGet.Config"

@@ -24,19 +24,17 @@ namespace BackEnd.Controllers
 
         public async Task<ActionResult> VratiClanarine(int idteretane)
         {
-            
-            var clanarine = await  Context.Teretana
-            .Where(p=> p.ID == idteretane)
-            .Include(p=> p.clanarine)
+            var teretana = await Context.Teretana.Where(p=> p.ID == idteretane).FirstOrDefaultAsync();
+            var clanarine = await  Context.Clanarine
+            .Where(p=> p.teretana == teretana)
             .ToListAsync();
 
             var listaclanarina = clanarine.Select(p=>
             new {
-                    Teretana = p.Naziv,
-                    listaclanarina = p.clanarine.Select(q=>
-                    new{
-                        naziv = q.Naziv,
-                    })
+                    id = p.ID,
+                    naziv = p.Naziv,
+                    cena = p.Cena,
+                    teretana = p.teretana.ID,
             });
        
             

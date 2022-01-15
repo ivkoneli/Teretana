@@ -1,12 +1,13 @@
 export class Termin{
 
 
-    constructor(id,pocetakTermina,krajTermina,clan,trener) {
+    constructor(id,pocetakTermina,krajTermina,clan,trener,teretana) {
         this.id=id;
         this.pocetakTermina=pocetakTermina;
         this.krajTermina=krajTermina;
         this.clan=clan;
         this.trener=trener;
+        this.teretana=teretana;
     }
 
     crtaj(host){
@@ -28,5 +29,9 @@ export class Termin{
         let el4 = document.createElement("td");
         el4.innerText=this.trener;
         tr.appendChild(el4);
+
+        let el5 = document.createElement("td");
+        el5.innerText=this.teretana;
+        tr.appendChild(el5);
     }
 }

@@ -19,7 +19,7 @@ namespace BackEnd.Controllers
            Context = context ;
        }
 
-        [Route("Treneri/{idtrenera}")]
+        [Route("TreneriPoID/{idtrenera}")]
         [HttpGet]
 
         public async Task<ActionResult> VratiTrenere(int idtrenera)
@@ -33,13 +33,14 @@ namespace BackEnd.Controllers
             return Ok(treneri);
         }
 
-        [Route("Treneri")]
+        [Route("Treneri/{idteretane}")]
         [HttpGet]
 
-        public async Task<ActionResult> VratiSveTrenere()
+        public async Task<ActionResult> VratiSveTrenere(int idteretane)
         {
-
-            var treneri =await Context.Treneri               
+            var teretana = await Context.Teretana.Where(p=> p.ID == idteretane).FirstOrDefaultAsync();
+            var treneri =await Context.Treneri
+                .Where(p=> p.teretana == teretana)               
                 .Include(p => p.Clanovi)
                 .ThenInclude(p=> p.clanarina)
                 .ToListAsync();
@@ -48,16 +49,16 @@ namespace BackEnd.Controllers
             new{
                 id = p.ID,
                 brLicence = p.brlicence,
-                teretana = p.teretana,
+                teretana = p.teretana.ID,
                 ime = p.Ime,
                 prezime =p.Prezime,
                 plata = p.Plata,
-                clanovi =p.Clanovi.Select(q=>
+                /*clanovi =p.Clanovi.Select(q=>
                 new{
                     ime = q.Ime,
                     prezime = q.Prezime,
                     clanarina = q.clanarina.Naziv
-                })
+                })*/
 
             });
 

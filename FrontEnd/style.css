@@ -1,14 +1,16 @@
 .GlavniKontejner{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 }
 .Forme{
     display: flex;
     flex-direction: row;
+    max-height: 280px;
+    min-height: 280px;
 }
 .Forma{
-    max-width: 250px;
-    min-width: 200px;
+    max-width: 300px;
+    min-width: 240px;
     width: 25%;
     margin: 20px;
     background-color: blanchedalmond;
@@ -29,7 +31,7 @@
 }
 .inputIme , .inputPrezime ,.inputEmail ,.FormaselectClanarina , .FormaselectTrener ,.inputzaTermin{
     display: flex;
-    max-width: 160px;
+    max-width: 150px;
     width: 65%;
     height:fit-content;
     text-align: left;
@@ -41,6 +43,7 @@
     width: 35%;
     min-width: 50px;
 }
+
 .labelSaznajVise{
     text-align: center;
     font-size: 25;
@@ -57,7 +60,10 @@ table{
     margin: 20px;
 }
 body{
-    background-color: black;
+    background: url("teretanapozadina.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100%,100%;
 }
 .divzaClanarinu , .divzaTrenera{
     display: flex;
@@ -88,10 +94,13 @@ body{
     margin-right: 5px;
     margin-top: 5px;
 }
-.btnUclani , .btnRezervisi{
+.btnUclani , .btnRezervisi, .btnPrikaziTermine{
     width: 90%;
     margin-left: 5px;
     margin-right: 5px;
+}
+.btnPrikaziTermine{
+    margin-bottom: 5px;
 }
 .btnRezervisi{
     margin-bottom: 5px;
@@ -99,4 +108,21 @@ body{
 .divSaznajvise{
     text-align: center;
     font-size: 30;
+}
+.divTeretana{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    height: 25%;
+    max-width: 250px;
+    min-width: 200px;
+    width: 25%;
+    margin: 20px;
+    background-color: blanchedalmond;
+}
+.divzaTeretanu{
+    height: 75%;
+    display: flex;
+    justify-content: flex-end;
+    margin: 5px;
 }

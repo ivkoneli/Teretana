@@ -19,11 +19,14 @@ namespace BackEnd.Controllers
            Context = context ;
        }
     
-        [Route("PreuzmiClana")]
+        [Route("PreuzmiClana/{idteretane}")]
         [HttpGet]
-        public async Task<ActionResult> PreuzmiClana(){
+        public async Task<ActionResult> PreuzmiClana(int idteretane){
             
+
+            var teretana = await Context.Teretana.Where(p=> p.ID == idteretane).FirstOrDefaultAsync();
             var clanovi = await Context.Clanovi
+            .Where(p=> p.teretana == teretana)
             .Include(p=> p.trener)
             .Include(p=> p.clanarina)
             .Include(p=> p.teretana)
@@ -43,11 +46,12 @@ namespace BackEnd.Controllers
 
             return Ok(clan);
         }
-        [Route("PreuzmiClanaC/{clanarinaID}")]
+        [Route("PreuzmiClanaC/{clanarinaID}/{idteretane}")]
         [HttpGet]
-        public async Task<ActionResult> PreuzmiClanapoClanarini(int clanarinaID){
+        public async Task<ActionResult> PreuzmiClanapoClanarini(int clanarinaID,int idteretane){
             
-            var clanovi = await Context.Clanovi.Where(p=> p.clanarina.ID == clanarinaID)
+            var teretana = await Context.Teretana.Where(p=> p.ID == idteretane).FirstOrDefaultAsync();
+            var clanovi = await Context.Clanovi.Where(p=> p.clanarina.ID == clanarinaID && p.teretana == teretana)
             .Include(p=> p.trener)
             .Include(p=> p.clanarina)
             .Include(p=> p.teretana)
@@ -66,11 +70,12 @@ namespace BackEnd.Controllers
         
             return Ok(clan);
         }
-        [Route("PreuzmiClanaT/{trenerID}")]
+        [Route("PreuzmiClanaT/{trenerID}/{idteretane}")]
         [HttpGet]
-        public async Task<ActionResult> PreuzmiClanapoTreneru(int trenerID){
+        public async Task<ActionResult> PreuzmiClanapoTreneru(int trenerID,int idteretane){
             
-            var clanovi = await Context.Clanovi.Where(p=> p.trener.ID == trenerID)
+            var teretana = await Context.Teretana.Where(p=> p.ID == idteretane).FirstOrDefaultAsync();
+            var clanovi = await Context.Clanovi.Where(p=> p.trener.ID == trenerID && p.teretana == teretana)
             .Include(p=> p.trener)
             .Include(p=> p.clanarina)
             .Include(p=> p.teretana)
