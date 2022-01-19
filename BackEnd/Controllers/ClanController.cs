@@ -46,6 +46,25 @@ namespace BackEnd.Controllers
 
             return Ok(clan);
         }
+        [Route("PreuzmiClana/{idteretane}/{email}")]
+        [HttpGet]
+        public async Task<ActionResult> PreuzmiClanaPoMejlu(int idteretane,string email){
+            
+
+                var teretana = await Context.Teretana.Where(p=> p.ID == idteretane).FirstOrDefaultAsync();
+                var clanovi = await Context.Clanovi.Where(p=> p.teretana == teretana && p.Email == email).FirstOrDefaultAsync();
+
+                if (clanovi == null){
+                    return Ok("Novi clan");
+                }
+                else if(clanovi != null){
+                    return BadRequest("Korisnik vec postoji");
+                }
+                else {
+                    return BadRequest("muda");
+                }
+
+        }
         [Route("PreuzmiClanaC/{clanarinaID}/{idteretane}")]
         [HttpGet]
         public async Task<ActionResult> PreuzmiClanapoClanarini(int clanarinaID,int idteretane){
@@ -187,6 +206,23 @@ namespace BackEnd.Controllers
             {
                 return BadRequest(e.Message);
             }
+        }
+        [Route("IzbrisiClana/{ime}/{prezime}/{email}/{idteretane}")]
+        [HttpDelete]
+
+        public async Task<ActionResult> IzbrisiClana(string ime ,string prezime ,string email ,int idteretane){
+
+            var teretana = await  Context.Teretana.Where(p=> p.ID == idteretane).FirstOrDefaultAsync();
+            var clan = await Context.Clanovi.Where(p=> p.Email == email && p.teretana == teretana).FirstOrDefaultAsync();
+            if (clan == null){
+                return BadRequest("Nepostojeci clan !");
+            }
+            else{               
+                Context.Clanovi.Remove(clan);
+                await Context.SaveChangesAsync();
+                return Ok($"Clan sa ID-em : {clan.ID} je obrisan !");
+            }
+
         }
     }
 }

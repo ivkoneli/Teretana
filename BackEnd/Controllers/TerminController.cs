@@ -20,7 +20,27 @@ namespace BackEnd.Controllers
        }
 
 
-        [Route("PrikaziSveTermineClanova/{idteretane}")]
+       [Route("VratiTermin/{idteretane}/{datum}")]
+       [HttpGet]
+
+       public async Task<ActionResult> VratiTermine(int idteretane ,DateTime datum)
+       {
+           var teretana = await Context.Teretana.Where(p=> p.ID == idteretane).FirstOrDefaultAsync();
+           var termini = await Context.Termini.Where(p=> p.teretana == teretana && p.pocetakTermina == datum).FirstOrDefaultAsync(); 
+            
+            if (termini == null){
+                return Ok("Novi termin");
+            }
+            else if (termini != null){
+                return BadRequest("Termin je vec zakazan !");
+            }
+            else {
+                return BadRequest("Error !!");
+            }
+
+
+       }
+       [Route("PrikaziSveTermineClanova/{idteretane}")]
        [HttpGet]
 
        public async Task<ActionResult> VratiTermine(int idteretane)
@@ -123,7 +143,7 @@ namespace BackEnd.Controllers
                         clan = clan,
                         trener = trener,
                         pocetakTermina = pocetakTermina,
-                        krajTermina = pocetakTermina,
+                        krajTermina = pocetakTermina.AddHours(1),
                     };
 
                     Context.Termini.Add(t);
@@ -138,5 +158,25 @@ namespace BackEnd.Controllers
                 return BadRequest(e.Message);
             }
        }
+
+       [Route("IzmeniTermin/{ime}/{prezime}/{email}/{teretana}/{noviTermin")]
+       [HttpPut]
+
+
+        public async Task<ActionResult> IzmeniTermin(string ime ,string prezime ,string email ,int idteretane ,DateTime noviTermin){
+
+            var teretana = await Context.Teretana.Where(p=> p.ID == idteretane).FirstOrDefaultAsync();
+            var clan = await Context.Clanovi.Where(p=> p.Email == email && p.Ime == ime).FirstOrDefaultAsync();
+
+            var termin = await Context.Termini.Where(p=> p.teretana == teretana  && p.clan == clan).FirstOrDefaultAsync();
+
+            var stariTermin = termin.pocetakTermina;
+            termin.pocetakTermina = noviTermin ;
+
+            await Context.SaveChangesAsync();
+
+            return Ok($"Uspesno je promenjen termin iz {stariTermin} u {termin.pocetakTermina} !!!");
+
+        }
     }
 }

@@ -100,7 +100,7 @@ export class Teretana{
         tabela.appendChild(tablebody);
 
         let th;
-        var zag=["DATUM1","DATUM2" , "CLAN" ,"TRENER","TERETANA"];
+        var zag=["POCETAK","KRAJ" , "CLAN" ,"TRENER","TERETANA"];
         zag.forEach(el=>{
             th = document.createElement("th");
             th.innerHTML=el;
@@ -188,11 +188,21 @@ export class Teretana{
         });
         host.appendChild(divzClanarinu);
 
+        let divzaUclani = document.createElement("div");
+        divzaUclani.className ="divzaUclani";
         let btnUclani = document.createElement("button");
         btnUclani.onclick=(ev)=>this.uclaniClana();
         btnUclani.className = "btnUclani";
         btnUclani.innerHTML = "Uclani";
-        host.appendChild(btnUclani);
+        divzaUclani.appendChild(btnUclani);
+
+        let btnIspisi = document.createElement("button");
+        btnIspisi.onclick=(ev)=>this.izbrisiClana();
+        btnIspisi.className = "btnIspisi";
+        btnIspisi.innerHTML = "Ispisi";
+        divzaUclani.appendChild(btnIspisi);
+
+        host.appendChild(divzaUclani);
 
 
         let divTermin = document.createElement("div");
@@ -207,11 +217,21 @@ export class Teretana{
         divTermin.appendChild(inputTermin);
         host.appendChild(divTermin);
 
+        let divTermini = document.createElement("div");
+        divTermini.className = "divTerminiDugme";
         let btnRezervisi = document.createElement("button");
         btnRezervisi.onclick=(ev)=>this.rezervisiTermin();
         btnRezervisi.className ="btnRezervisi";
         btnRezervisi.innerHTML = "Rezervisi";
-        host.appendChild(btnRezervisi);
+        divTermini.appendChild(btnRezervisi);
+
+        let btnIzmeni = document.createElement("button");
+        btnIzmeni.onclick=(ev)=>this.izmeniTermin();
+        btnIzmeni.className ="btnIzmeni";
+        btnIzmeni.innerHTML = "Izmeni";
+        divTermini.appendChild(btnIzmeni);
+
+        host.appendChild(divTermini);
 
 
 
@@ -223,80 +243,170 @@ export class Teretana{
         host.appendChild(btnPrikaziT);
         
     }
-    rezervisiTermin(){
+    izmeniTermin(){
+
         let podaci = [];
-        this.obrisiPrethodniSadrzajTermina(); 
-        podaci = this.prikupiInformacijeoClanu();
-        
+        podaci= this.prikupiInformacijeoClanu();
+        let datum = document.querySelector(".inputTermin");
 
-        let datum = this.container.querySelector(".inputTermin");
-        //var clanarina = this.listaClanarina[podaci[3]-1];
-        var trener = this.listaTrenera.find(trener => trener.id == podaci[3]);
-        console.log(podaci[3]);
-        let date1 = new Date();
-        //date1 = datum.valueAsDate ;
-        var krajtermina = new Date(date1.getTime() + 60*60*100);
-        alert("Korisnik je rezervisao novi termin" +  
-         "\n Ime : " + podaci[0].value +
-         "\n Prezime : " + podaci[1].value +
-         //"\n Email : " + podaci[2].value +
-         //"\n Clanarina : " + clanarina.naziv +
-         "\n Trener :" + trener.ime + ' ' + trener.prezime+
-         "\n DatumP :" + datum.value +
-         "\n DatumK :" + krajtermina +
-         "\n Teretana :" + this.naziv);
-
-        //this.prikaziTermineClana();
-
-        fetch(`https://localhost:5001/Termin/DodajTermin/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}/${datum.value}/${this.id}`,
+        fetch(`https://localhost:5001/Termin/IzmeniTermin/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}/${this.id}/${datum.value}`,
         {
-            method :"POST",
+            method :"PUT",
             Headers:{
                 "Content-Type":"application/json"
-            },
-        }).then(s=>{
+        },
+            }).then(s=>{
                 if(s.ok){
-                    console.log(podaci);
+                    alert("Uspesno izmenjen termin ")
                     this.prikaziTermineClana(podaci);
                     //this.prikaziSveTermine();
                 }
         })
 
+
+
     }
-    prikaziSveTermine(){
-        var telo = this.obrisiPrethodniSadrzajTermina(); // brise prethodnu tabelu (ako postoji) i opet je kreira praznu  i vrati nam tbody 
-        this.obrisiPrethodniSadrzaj();
+    rezervisiTermin(){
 
+        let podaci = [];
+        this.obrisiPrethodniSadrzajTermina(); 
+        podaci = this.prikupiInformacijeoClanu();
+        let datum = this.container.querySelector(".inputTermin");
+        
 
-        fetch(`https://localhost:5001/Termin/PrikaziSveTermineClanova/${this.id}`,
+        fetch(`https://localhost:5001/Termin/VratiTermin/${this.id}/${datum.value}`,
         {
-            method:"GET",
+            method :"GET",
             Headers:{
                 "Content-Type":"application/json"
-        },
+            },
         }).then(s=>{
                 if(s.ok){
-                         //console.log(podaci);//var telo = this.obrisiPrethodniSadrzaj() 
-                    s.json().then(data =>{
-                            console.log(data);
-                            //var teloTabele = document.querySelector(".TabelaPodaciTermini"); //tbody za tabelu koju smo napravili
-                            data.forEach(tr=>
-                                {           
-                                    var clan = this.listaClanova.find(clan => clan.id == tr.clan); // tr.clan je ID clana 
-                                    var trener = this.listaTrenera.find(trener => trener.id == tr.trener); // IDtrenera      
-                                    let t = new Termin(tr.id,tr.pocetakTermina,tr.krajTermina,clan.ime,trener.ime,this.naziv);
-                                    t.crtaj(telo); // crtanje u tu tabelu 
-                                })
-                            
-                    })
+                        //var clanarina = this.listaClanarina[podaci[3]-1];
+                 var trener = this.listaTrenera.find(trener => trener.id == podaci[3]);
+                console.log(podaci[3]);
+                //date1 = datum.valueAsDate ;
+                //var krajtermina = new Date(date1.getTime() + 60*60*100);
+                alert("Korisnik je rezervisao novi termin" +  
+                 "\n Ime : " + podaci[0].value +
+                "\n Prezime : " + podaci[1].value +
+                //"\n Email : " + podaci[2].value +
+                //"\n Clanarina : " + clanarina.naziv +
+                "\n Trener :" + trener.ime + ' ' + trener.prezime+
+                "\n DatumP :" + datum.value +
+                //"\n DatumK :" + krajtermina +
+                 "\n Teretana :" + this.naziv);
+
+                //this.prikaziTermineClana();
+
+                fetch(`https://localhost:5001/Termin/DodajTermin/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}/${datum.value}/${this.id}`,
+                {
+                    method :"POST",
+                    Headers:{
+                        "Content-Type":"application/json"
+                },
+                    }).then(s=>{
+                        if(s.ok){
+                            console.log(podaci);
+                            this.prikaziTermineClana(podaci);
+                            //this.prikaziSveTermine();
+                        }
+                })
+                }
+                else{
+                    alert("Termin je vec zakazan !");
                 }
         })
+
+    }
+    prikaziSveTermine(){
+        let listatermina = this.vratiTermine();
+        //var telo = this.obrisiPrethodniSadrzajTermina(); // brise prethodnu tabelu (ako postoji) i opet je kreira praznu  i vrati nam tbody
+       /* let datum = this.container.querySelector(".inputTermin"); 
+        console.log(datum.value);
+
+        listatermina.forEach(termin => {
+            console.log(termin.pocetakTermina);
+            
+        });*/
+
+       // if(listatermina.find(termin => termin.pocetakTermina.ToShortDateString() == datum.value) == null){
+       //     alert ("Nepostojeci termin");
+       // }
+       // else{
+            let kontTabeleTermini = document.createElement("div");
+            this.obrisiPrethodniSadrzaj();
+            this.obrisiPrethodniSadrzajTermina();
+            this.container.appendChild(kontTabeleTermini);
+            this.crtajTabeluTermina(kontTabeleTermini);
+            var telo = document.querySelector(".TabelaPodaciTermini");
+    
+    
+            fetch(`https://localhost:5001/Termin/PrikaziSveTermineClanova/${this.id}`,
+            {
+                method:"GET",
+                Headers:{
+                    "Content-Type":"application/json"
+            },
+            }).then(s=>{
+                    if(s.ok){
+                             //console.log(podaci);//var telo = this.obrisiPrethodniSadrzaj() 
+                        s.json().then(data =>{
+                                console.log(data);
+                                //var teloTabele = document.querySelector(".TabelaPodaciTermini"); //tbody za tabelu koju smo napravili
+                                data.forEach(tr=>
+                                    {           
+                                        var clan = this.listaClanova.find(clan => clan.id == tr.clan); // tr.clan je ID clana 
+                                        var trener = this.listaTrenera.find(trener => trener.id == tr.trener); // IDtrenera      
+                                        let t = new Termin(tr.id,tr.pocetakTermina,tr.krajTermina,clan.ime,trener.ime,this.naziv);
+                                        t.crtaj(telo); // crtanje u tu tabelu 
+                                    })
+                                
+                        })
+                    }
+            })
+       // }
+        
+    }
+    vratiTermine(){
+        let listaTermina = [];
+        fetch(`https://localhost:5001/Termin/PrikaziSveTermineClanova/${this.id}`,
+            {
+                method:"GET",
+                Headers:{
+                    "Content-Type":"application/json"
+            },
+            }).then(s=>{
+                    if(s.ok){
+                             //console.log(podaci);//var telo = this.obrisiPrethodniSadrzaj() 
+                        s.json().then(data =>{
+                                console.log(data);
+                                //var teloTabele = document.querySelector(".TabelaPodaciTermini"); //tbody za tabelu koju smo napravili
+                                data.forEach(tr=>
+                                    {           
+                                        var clan = this.listaClanova.find(clan => clan.id == tr.clan); // tr.clan je ID clana 
+                                        var trener = this.listaTrenera.find(trener => trener.id == tr.trener); // IDtrenera      
+                                        let t = new Termin(tr.id,tr.pocetakTermina,tr.krajTermina,clan.ime,trener.ime,this.naziv);
+                                        listaTermina.push(t);
+                                       // t.crtaj(telo); // crtanje u tu tabelu 
+                                    })
+                                
+                        })
+                    }
+            })
+            console.log(listaTermina);
+            return listaTermina ;
     }
     prikaziTermineClana(podaci){
         //let podaci = [];
         //podaci = this.prikupiInformacijeoClanu();
-        var telo = this.obrisiPrethodniSadrzajTermina();
+        this.obrisiPrethodniSadrzajTermina();
         this.obrisiPrethodniSadrzaj();
+        let kontTabeleTermini = document.createElement("div");
+        this.container.appendChild(kontTabeleTermini);
+        this.crtajTabeluTermina(kontTabeleTermini);
+        var telo = document.querySelector(".TabelaPodaciTermini");
+
 
         fetch(`https://localhost:5001/Termin/PrikaziTermineClana/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}`,
         {
@@ -329,7 +439,7 @@ export class Teretana{
             roditelj.removeChild(tabela);
             let kontTabeleTermini = document.createElement("div");
             this.container.appendChild(kontTabeleTermini);
-            this.crtajTabeluTermina(kontTabeleTermini);
+           // this.crtajTabeluTermina(kontTabeleTermini);
             return document.querySelector(".TabelaPodaciTermini");
 
         }
@@ -337,7 +447,7 @@ export class Teretana{
         {
             let kontTabeleTermini = document.createElement("div");
             this.container.appendChild(kontTabeleTermini);
-            this.crtajTabeluTermina(kontTabeleTermini);
+            //this.crtajTabeluTermina(kontTabeleTermini);
             return document.querySelector(".TabelaPodaciTermini");
 
         } 
@@ -364,41 +474,90 @@ export class Teretana{
     uclaniClana(){
         let podaci = [];
         podaci = this.prikupiInformacijeoClanu();
+        console.log(podaci[2].value);
+        //console.log(this.listaClanova);
+ 
+        fetch(`https://localhost:5001/Clan/PreuzmiClana/${this.id}/${podaci[2].value}`,
+        
+        {
+        method: "GET",
+        Headers:{
+            "Content-Type":"application/json"
+        },
+        }).then(s=>{
+            if(s.ok){
 
-        var clanarina = this.listaClanarina.find(clanarina => clanarina.id == podaci[4]);
-        var trener = this.listaTrenera.find(trener => trener.id == podaci[3]);
+                
+                var clanarina = this.listaClanarina.find(clanarina => clanarina.id == podaci[4]);
+                console.log(clanarina.naziv);
+                var trener = this.listaTrenera.find(trener => trener.id == podaci[3]);
 
-        alert("Uclanio se novi korisink" +  
-         "\n Ime : " + podaci[0].value +
-         "\n Prezime : " + podaci[1].value +
-         "\n Email : " + podaci[2].value +
-         "\n Clanarina : " + clanarina.naziv + podaci[4] + 
-         "\n Trener :" + trener.ime + ' ' + trener.prezime + podaci[3] +
-         "\n Teretana" + this.naziv );
+
+                alert("Uclanio se novi korisink" +  
+                "\n Ime : " + podaci[0].value +
+                "\n Prezime : " + podaci[1].value +
+                "\n Email : " + podaci[2].value +
+                "\n Clanarina : " + clanarina.naziv + podaci[4] + 
+                "\n Trener :" + trener.ime + ' ' + trener.prezime + podaci[3] +
+                "\n Teretana" + this.naziv );
          
-        //this.prikazisveClanove();
+                 //this.prikazisveClanove();
         
-        fetch(`https://localhost:5001/Clan/Uclani/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}/${podaci[3]}/${podaci[4]}/${this.id}`,
+                fetch(`https://localhost:5001/Clan/Uclani/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}/${podaci[3]}/${podaci[4]}/${this.id}`,
         
-         {
-         method: "POST",
-         Headers:{
-             "Content-Type":"application/json"
-         },
-         }).then(s=>{
-             if(s.ok){
+                {
+                    method: "POST",
+                    Headers:{
+                        "Content-Type":"application/json"
+                     },
+                    }).then(s=>{
+                    if(s.ok){
                               
-                console.log(this.listaClanova);
-                this.prikazisveClanove();
-                }
-            }
-        )
+                        console.log(this.listaClanova);
+                        this.prikazisveClanove();
+                    }
+                 }
+            )         
+               
+               }
+            else{
+                alert("Korisnik vec postoji !");
+            }   
+           }
+       )         
+        
+       /* else if(clan != null){
+            alert ("Vec ste uclanjeni !!!");
+        }
+        else{
+            alert("Muda");
+        }*/
+
          //let c = new Clan(ime.value,prezime.value ,email.value,clanarineID,treneriID);
          //this.listaClanova.push(c);
          //console.log(c);
          //console.log(this.listaClanova);
          //this.prikazisveClanove();
 
+    }
+    izbrisiClana(){
+        let podaci = [];
+        podaci = this.prikupiInformacijeoClanu();
+        
+        fetch(`https://localhost:5001/Clan/IzbrisiClana/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}/${this.id}`,
+        
+                {
+                    method: "DELETE",
+                    Headers:{
+                        "Content-Type":"application/json"
+                     },
+                    }).then(s=>{
+                    if(s.ok){
+                        alert("Korisnik " + podaci[0].value +" je obrisan !")      
+                        console.log(this.listaClanova);
+                        this.prikazisveClanove();
+                    }
+                 })
     }
 
 
@@ -489,7 +648,7 @@ export class Teretana{
             var tabela = document.querySelector(".Tabela");
             var roditelj = tabela.parentNode;
             roditelj.removeChild(tabela);
-            this.crtajTabelu(roditelj);
+            //this.crtajTabelu(roditelj);
             return document.querySelector(".TabelaPodaci");
 
         }
@@ -497,7 +656,7 @@ export class Teretana{
         {
             let kontTabela = document.createElement("div");
             this.container.appendChild(kontTabela);
-            this.crtajTabelu(kontTabela);
+            //this.crtajTabelu(kontTabela);
             return document.querySelector(".TabelaPodaci");
 
         } 
@@ -516,6 +675,11 @@ export class Teretana{
     }
     prikazisveClanove(){
         this.obrisiPrethodniSadrzajTermina();
+        this.obrisiPrethodniSadrzaj();
+        let kontTabela = document.createElement("div");
+        this.container.appendChild(kontTabela);
+        this.crtajTabelu(kontTabela);
+        var telo =  document.querySelector(".TabelaPodaci");
 
 
         fetch(`https://localhost:5001/Clan/PreuzmiClana/${this.id}`,
@@ -523,7 +687,7 @@ export class Teretana{
             method:"GET"
         }).then(s=>{
                 if(s.ok){
-                         var telo = this.obrisiPrethodniSadrzaj()
+                         //var telo = this.obrisiPrethodniSadrzaj()
                     s.json().then(data =>{
                             console.log(data);
                             //var teloTabele = document.querySelector(".TabelaPodaci");
@@ -547,6 +711,11 @@ export class Teretana{
     pretretraziTrenere(){
         
         this.obrisiPrethodniSadrzajTermina();
+        this.obrisiPrethodniSadrzaj();
+        let kontTabela = document.createElement("div");
+        this.container.appendChild(kontTabela);
+        this.crtajTabelu(kontTabela);
+        var telo =  document.querySelector(".TabelaPodaci");
 
         let optionTr = this.container.querySelector(".selectTrener");
         var treneriID =optionTr.options[optionTr.selectedIndex].value;
@@ -560,7 +729,7 @@ export class Teretana{
             method:"GET"
         }).then(s=>{
                 if(s.ok){
-                    var telo = this.obrisiPrethodniSadrzaj();
+                    //var telo = this.obrisiPrethodniSadrzaj();
                     s.json().then(data =>{
                             console.log(data);
                             //var teloTabele = document.querySelector(".TabelaPodaci");
@@ -580,7 +749,13 @@ export class Teretana{
 
     pretretraziClanarinu(){
 
+        //this.obrisiPrethodniSadrzajTermina();
         this.obrisiPrethodniSadrzajTermina();
+        this.obrisiPrethodniSadrzaj();
+        let kontTabela = document.createElement("div");
+        this.container.appendChild(kontTabela);
+        this.crtajTabelu(kontTabela);
+        var telo =  document.querySelector(".TabelaPodaci");
 
         let optionCl = this.container.querySelector(".selectClanarina");
         var clanarineID =optionCl.options[optionCl.selectedIndex].value;
@@ -593,7 +768,7 @@ export class Teretana{
             method:"GET"
         }).then(s=>{
                 if(s.ok){
-                    var telo = this.obrisiPrethodniSadrzaj();
+                    //var telo = this.obrisiPrethodniSadrzaj();
                     s.json().then(data =>{
                             console.log(data);
                             //var teloTabele = document.querySelector(".TabelaPodaci");

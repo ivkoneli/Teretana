@@ -5,7 +5,7 @@
 .Forme{
     display: flex;
     flex-direction: row;
-    max-height: 280px;
+    max-height: 290px;
     min-height: 280px;
 }
 .Forma{
@@ -13,35 +13,42 @@
     min-width: 240px;
     width: 25%;
     margin: 20px;
-    background-color: blanchedalmond;
+    background-color: rgba(0,0,0 , 0.8);
+    border: solid tomato 1px;
 }
 .Pretraga{
     max-width: 350px;
     min-width: 300px;
     width: 30%;
-    background-color: blanchedalmond;
+    background-color: rgba(0,0,0 , 0.8);
     display: flex;
     flex-direction: column;
     margin: 20px;
+    border:  solid tomato 1px;
 }
 .divzaIme ,.divzaPrezime,.divzaMail,.FormaDivzaClanarinu ,.FormaDivzaTrenera ,.divzaTermin{
     display: flex;
     justify-content: flex-end;
     margin: 5px;
 }
-.inputIme , .inputPrezime ,.inputEmail ,.FormaselectClanarina , .FormaselectTrener ,.inputzaTermin{
+.inputIme , .inputPrezime ,.inputEmail ,.FormaselectClanarina , .FormaselectTrener ,.inputTermin{
     display: flex;
     max-width: 150px;
     width: 65%;
     height:fit-content;
     text-align: left;
+    color: whitesmoke;
+    background-color: gray;
 }
-.labelIme , .labelPrezime , .labelEmail , .labelClanarina , .labelTrener , .labelTermin{
+.labelIme , .labelPrezime , .labelEmail , .labelClanarina , .labelTrener , .labelTermin, .labelTeretana{
 
     display: flex;
-    text-align: left;
+    text-align:left;
     width: 35%;
     min-width: 50px;
+    text-decoration: whitesmoke;
+    text-decoration-color: thistle;
+    font-weight: bold;
 }
 
 .labelSaznajVise{
@@ -51,12 +58,12 @@
     width: 100%;
 }
 table ,tr ,th ,td{
-    border: 1px solid black;
+    border: 1px solid tomato
     
 }
 table{
     border-collapse: collapse;
-    background-color: blanchedalmond;
+    background-color: black;
     margin: 20px;
 }
 body{
@@ -64,6 +71,7 @@ body{
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: 100%,100%;
+    color: thistle;
 }
 .divzaClanarinu , .divzaTrenera{
     display: flex;
@@ -76,6 +84,8 @@ body{
     width: 65%;
     height:fit-content;
     text-align: left;
+    color: whitesmoke;
+    background-color: gray;
 }
 .labelPretragaClanarina , .labelPretragaTrener{
     display: flex;
@@ -99,6 +109,9 @@ body{
     margin-left: 5px;
     margin-right: 5px;
 }
+.btnUclani, .btnIspisi{
+    width: 45%;
+}
 .btnPrikaziTermine{
     margin-bottom: 5px;
 }
@@ -113,16 +126,48 @@ body{
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    height: 25%;
-    max-width: 250px;
-    min-width: 200px;
+    height: 60%;
+    max-width: 270px;
+    min-width: 240px;
     width: 25%;
     margin: 20px;
-    background-color: blanchedalmond;
+    background-color: rgba(0,0,0 , 0.8);
+    border: solid tomato 1px;
 }
 .divzaTeretanu{
     height: 75%;
+    width: 100%;
     display: flex;
+    flex-direction: row;
     justify-content: flex-end;
     margin: 5px;
 }
+.btnPrikazi,.btnUclani,.btnRezervisi,.btnIzmeni,.btnPrikazClanova ,.btnPrikaziTermine,.btnPretraga,.btnIspisi{
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #f4511e;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+  }
+  .btnIzmeni,.btnRezervisi{
+      width: 45%;
+  }
+  
+  .btnPrikazi ,.btnUclani, .btnRezervisi,.btnIzmeni,.btnPrikazClanova ,.btnPrikaziTermine,.btnPretraga span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+  }
+  .selectTeretana{
+    color: whitesmoke;
+    background-color: gray; 
+  }
+  .btnPrikazClanova{
+      margin-top: 10px;
+  }
+  
