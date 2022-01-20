@@ -1,14 +1,14 @@
 # Teretana
 WebProjekat 2021 
 
-Tema projekta je sajt na kome je omoguceno registorvanje(uclanjivanje) novog korisnika i rezervisanje termina treninga u 2  razlicite teretane ("OneWellness" i "Kangoo") 
+Tema projekta je sajt na kome je omoguceno registrovanje(uclanjivanje) novog korisnika i rezervisanje termina treninga u 2  razlicite teretane ("OneWellness" i "Kangoo") 
 uz dodatnu mogucnost promene rezervisanog termina i prikaz zeljenih podataka u "Saznaj Vise" delu 
 
 Prvo sto vidimo na sajtu je izbor teretane u gornjem levom uglu 
 
 ![image](https://user-images.githubusercontent.com/81016958/150243685-cecea442-84e1-4d08-b0ae-220505686b4d.png)
 
-Nakon sto smo odabrali teretanu klikom na dugme prikaz pojavljuje se osnovna forma za unos korisnickih podataka i forma "Saznaj vise" preko koje dobijamo dodatne informaicije o zeljenoj teretani 
+Nakon sto smo odabrali teretanu klikom na dugme prikaz pojavljuje se osnovna forma za unos korisnickih podataka i forma "Saznaj vise" preko koje dobijamo dodatne informacije o zeljenoj teretani 
 
 ![image](https://user-images.githubusercontent.com/81016958/150243976-727700cb-08d8-4e32-8b05-d1d502b748c0.png)
 
