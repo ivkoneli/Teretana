@@ -5,12 +5,12 @@
 .Forme{
     display: flex;
     flex-direction: row;
-    max-height: 290px;
+    max-height: 320px;
     min-height: 280px;
 }
 .Forma{
-    max-width: 300px;
-    min-width: 240px;
+
+    min-width: 250px;
     width: 25%;
     margin: 20px;
     background-color: rgba(0,0,0 , 0.8);
@@ -26,12 +26,12 @@
     margin: 20px;
     border:  solid tomato 1px;
 }
-.divzaIme ,.divzaPrezime,.divzaMail,.FormaDivzaClanarinu ,.FormaDivzaTrenera ,.divzaTermin{
+.divzaIme ,.divzaPrezime,.divzaMail,.FormaDivzaClanarinu ,.FormaDivzaTrenera ,.divzaTermin, .divzaNoviTermin{
     display: flex;
     justify-content: flex-end;
     margin: 5px;
 }
-.inputIme , .inputPrezime ,.inputEmail ,.FormaselectClanarina , .FormaselectTrener ,.inputTermin{
+.inputIme , .inputPrezime ,.inputEmail ,.FormaselectClanarina , .FormaselectTrener ,.inputTermin, .inputNoviTermin{
     display: flex;
     max-width: 150px;
     width: 65%;
@@ -40,7 +40,7 @@
     color: whitesmoke;
     background-color: gray;
 }
-.labelIme , .labelPrezime , .labelEmail , .labelClanarina , .labelTrener , .labelTermin, .labelTeretana{
+.labelIme , .labelPrezime , .labelEmail , .labelClanarina , .labelTrener , .labelTermin,.labelNoviTermin,.labelTeretana{
 
     display: flex;
     text-align:left;
@@ -63,7 +63,7 @@ table ,tr ,th ,td{
 }
 table{
     border-collapse: collapse;
-    background-color: black;
+    background-color: rgba(0,0,0 , 0.8);
     margin: 20px;
 }
 body{

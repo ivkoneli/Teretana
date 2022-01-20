@@ -67,12 +67,14 @@ namespace BackEnd.Controllers
            
            return Ok(termin);
        }
-       [Route("PrikaziTermineClana/{ime}/{prezime}/{email}")]
+       [Route("PrikaziTermineClana/{ime}/{prezime}/{email}/{idteretane}")]
        [HttpGet]
 
-       public async Task<ActionResult> VratiTermine(string ime ,string prezime,string email)
+       public async Task<ActionResult> VratiTermine(string ime ,string prezime,string email,int idteretane)
        {
-           var termini = await Context.Termini.Where(p=> p.clan.Email == email)
+           var teretana = await Context.Teretana.Where(p=> p.ID == idteretane).FirstOrDefaultAsync();
+           var clan = await Context.Clanovi.Where(p=> p.Email == email).FirstOrDefaultAsync();
+           var termini = await Context.Termini.Where(p=> p.clan == clan)
            .Include(p=> p.clan)
            .ThenInclude(p=> p.trener)
            .ToListAsync();
@@ -159,19 +161,19 @@ namespace BackEnd.Controllers
             }
        }
 
-       [Route("IzmeniTermin/{ime}/{prezime}/{email}/{teretana}/{noviTermin")]
+       [Route("IzmeniTermin/{ime}/{prezime}/{email}/{idteretane}/{stariTermin}/{noviTermin}")]
        [HttpPut]
 
 
-        public async Task<ActionResult> IzmeniTermin(string ime ,string prezime ,string email ,int idteretane ,DateTime noviTermin){
+        public async Task<ActionResult> IzmeniTermin(string ime ,string prezime ,string email ,int idteretane ,DateTime stariTermin,DateTime noviTermin){
 
             var teretana = await Context.Teretana.Where(p=> p.ID == idteretane).FirstOrDefaultAsync();
             var clan = await Context.Clanovi.Where(p=> p.Email == email && p.Ime == ime).FirstOrDefaultAsync();
 
-            var termin = await Context.Termini.Where(p=> p.teretana == teretana  && p.clan == clan).FirstOrDefaultAsync();
+            var termin = await Context.Termini.Where(p=> p.teretana == teretana  && p.clan == clan && p.pocetakTermina == stariTermin).FirstOrDefaultAsync();
 
-            var stariTermin = termin.pocetakTermina;
             termin.pocetakTermina = noviTermin ;
+            termin.krajTermina = noviTermin.AddHours(1);
 
             await Context.SaveChangesAsync();
 

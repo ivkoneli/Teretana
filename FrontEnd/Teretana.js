@@ -217,6 +217,19 @@ export class Teretana{
         divTermin.appendChild(inputTermin);
         host.appendChild(divTermin);
 
+
+        let divNoviTermin = document.createElement("div");
+        divNoviTermin.className = "divzaNoviTermin";
+        let l7 = document.createElement("label");
+        l7.innerHTML ="NoviTermin";
+        l7.className ="labelNoviTermin";
+        divNoviTermin.appendChild(l7);
+        let inputNoviTermin =document.createElement("input")
+        inputNoviTermin.className="inputNoviTermin";
+        inputNoviTermin.type = "datetime";
+        divNoviTermin.appendChild(inputNoviTermin);
+        host.appendChild(divNoviTermin);
+
         let divTermini = document.createElement("div");
         divTermini.className = "divTerminiDugme";
         let btnRezervisi = document.createElement("button");
@@ -248,8 +261,9 @@ export class Teretana{
         let podaci = [];
         podaci= this.prikupiInformacijeoClanu();
         let datum = document.querySelector(".inputTermin");
+        let datumNovog = document.querySelector(".inputNoviTermin")
 
-        fetch(`https://localhost:5001/Termin/IzmeniTermin/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}/${this.id}/${datum.value}`,
+        fetch(`https://localhost:5001/Termin/IzmeniTermin/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}/${this.id}/${datum.value}/${datumNovog.value}`,
         {
             method :"PUT",
             Headers:{
@@ -272,9 +286,19 @@ export class Teretana{
         this.obrisiPrethodniSadrzajTermina(); 
         podaci = this.prikupiInformacijeoClanu();
         let datum = this.container.querySelector(".inputTermin");
+        console.log(podaci[2]);
         
 
-        fetch(`https://localhost:5001/Termin/VratiTermin/${this.id}/${datum.value}`,
+        fetch(`https://localhost:5001/Clan/PreuzmiClanaE/${this.id}/${podaci[2].value}`, // vraca ok ako je Novi korisnik i badrequest ako korisnik vec postoji
+        {
+            method:"GET",
+        })
+        .then(s=>{
+            if(s.ok){
+                alert("Nepostojeci clan !!! " + "\n Morate se prvo uclaniti u teretanu ");
+            }
+            else{
+                fetch(`https://localhost:5001/Termin/VratiTermin/${this.id}/${datum.value}`,
         {
             method :"GET",
             Headers:{
@@ -317,10 +341,13 @@ export class Teretana{
                     alert("Termin je vec zakazan !");
                 }
         })
-
+            }
+ 
+        });
+       
     }
     prikaziSveTermine(){
-        let listatermina = this.vratiTermine();
+        //let listatermina = this.vratiTermine();
         //var telo = this.obrisiPrethodniSadrzajTermina(); // brise prethodnu tabelu (ako postoji) i opet je kreira praznu  i vrati nam tbody
        /* let datum = this.container.querySelector(".inputTermin"); 
         console.log(datum.value);
@@ -408,7 +435,7 @@ export class Teretana{
         var telo = document.querySelector(".TabelaPodaciTermini");
 
 
-        fetch(`https://localhost:5001/Termin/PrikaziTermineClana/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}`,
+        fetch(`https://localhost:5001/Termin/PrikaziTermineClana/${podaci[0].value}/${podaci[1].value}/${podaci[2].value}/${this.id}`,
         {
             method:"GET",
             Headers:{
@@ -465,19 +492,23 @@ export class Teretana{
         let optionTr = this.container.querySelector(".FormaselectTrener");
         var treneriID = optionTr.options[optionTr.selectedIndex].value; // IDtrenera 
         //var trener = this.listaTrenera[treneriID-1]; //objekat trenera
-        
+
         let informacije =[];
-        informacije[0]=ime;informacije[1]=prezime;informacije[2]=email;informacije[3]=treneriID;informacije[4]=clanarineID;
-        console.log(informacije);
+        informacije[0]=ime ;informacije[1]=prezime;informacije[2]=email;informacije[4]=clanarineID;informacije[3]=treneriID;
         return informacije;
+
     }
     uclaniClana(){
         let podaci = [];
         podaci = this.prikupiInformacijeoClanu();
         console.log(podaci[2].value);
-        //console.log(this.listaClanova);
+        console.log(podaci[4],podaci[3]);
+
+
+        var clanarina = this.listaClanarina.find(clanarina => clanarina.id == podaci[4]);
+        var trener = this.listaTrenera.find(trener => trener.id == podaci[3]);
  
-        fetch(`https://localhost:5001/Clan/PreuzmiClana/${this.id}/${podaci[2].value}`,
+        fetch(`https://localhost:5001/Clan/PreuzmiClanaE/${this.id}/${podaci[2].value}`, // vraca ok ako je NOVI clan ,vraca badrequest ako clan vec postoji 
         
         {
         method: "GET",
@@ -488,17 +519,13 @@ export class Teretana{
             if(s.ok){
 
                 
-                var clanarina = this.listaClanarina.find(clanarina => clanarina.id == podaci[4]);
-                console.log(clanarina.naziv);
-                var trener = this.listaTrenera.find(trener => trener.id == podaci[3]);
-
 
                 alert("Uclanio se novi korisink" +  
                 "\n Ime : " + podaci[0].value +
                 "\n Prezime : " + podaci[1].value +
                 "\n Email : " + podaci[2].value +
-                "\n Clanarina : " + clanarina.naziv + podaci[4] + 
-                "\n Trener :" + trener.ime + ' ' + trener.prezime + podaci[3] +
+                "\n Clanarina : " + clanarina.naziv +  
+                "\n Trener :" + trener.ime + ' ' + trener.prezime +
                 "\n Teretana" + this.naziv );
          
                  //this.prikazisveClanove();
@@ -512,7 +539,6 @@ export class Teretana{
                      },
                     }).then(s=>{
                     if(s.ok){
-                              
                         console.log(this.listaClanova);
                         this.prikazisveClanove();
                     }

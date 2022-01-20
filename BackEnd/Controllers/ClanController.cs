@@ -46,7 +46,7 @@ namespace BackEnd.Controllers
 
             return Ok(clan);
         }
-        [Route("PreuzmiClana/{idteretane}/{email}")]
+        [Route("PreuzmiClanaE/{idteretane}/{email}")]
         [HttpGet]
         public async Task<ActionResult> PreuzmiClanaPoMejlu(int idteretane,string email){
             
@@ -120,10 +120,10 @@ namespace BackEnd.Controllers
         {
             try
             { 
-                var clanovi = await Context.Clanovi.Where(p=> p.Email == email).FirstOrDefaultAsync();
+                var teretana = await Context.Teretana.Where(p=> p.ID == idteretane).FirstOrDefaultAsync();
+                var clanovi = await Context.Clanovi.Where(p=> p.Email == email && p.teretana == teretana).FirstOrDefaultAsync();
                 var trener = await Context.Treneri.Where(p=> p.ID == idtrenera).FirstOrDefaultAsync();
                 var clanarina = await Context.Clanarine.Where(p=> p.ID == idclanarine).FirstOrDefaultAsync();
-                var teretana = await Context.Teretana.Where(p=> p.ID == idteretane).FirstOrDefaultAsync();
                     if (trener == null || clanarina == null)
                     {
                         return BadRequest("Wtf si upravo probao ti lice ???");
@@ -214,6 +214,15 @@ namespace BackEnd.Controllers
 
             var teretana = await  Context.Teretana.Where(p=> p.ID == idteretane).FirstOrDefaultAsync();
             var clan = await Context.Clanovi.Where(p=> p.Email == email && p.teretana == teretana).FirstOrDefaultAsync();
+            //var terminiclana = await Context.Termini.Where(p=> p.clan == clan ).FirstOrDefaultAsync();
+
+            foreach (var  termin in Context.Termini.Where(t=> t.clan == clan))
+            {
+                Context.Termini.Remove(termin);
+
+            }
+
+
             if (clan == null){
                 return BadRequest("Nepostojeci clan !");
             }
